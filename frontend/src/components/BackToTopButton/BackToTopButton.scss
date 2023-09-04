@@ -1,0 +1,20 @@
+@use "../../styles/constants/colors.scss" as color;
+
+.background-top-button {
+	position: fixed;
+	bottom: 2vh;
+	right: 2vw;
+	z-index: 10;
+	padding: 0.5%;
+	display: flex;
+	font-size: 100%;
+	background-color: color.$primary-background-color;
+	color: color.$primary-text-on-primary-background-color;
+	width: max(5vh, 50px);
+	height: max(5vh, 50px);
+	align-items: center;
+	border-radius: 50%;
+	border-color: color.$primary-border-color;
+	border-style: solid;
+	border-width: 2px;
+}

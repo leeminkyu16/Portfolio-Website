@@ -1,0 +1,53 @@
+@use "../../styles/constants/colors.scss" as color;
+
+.background-div {
+	background: radial-gradient(
+		ellipse at center,
+		color.$background-center-color 0%,
+		color.$primary-background-color 100%
+	);
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.background-card {
+	width: 250px;
+	height: 160px;
+	box-shadow: 0 0 12px color.$background-card-shadow-color;
+	border: 1px solid color.$background-card-border-color;
+	font-family: Helvetica, sans-serif;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: default;
+
+	&:hover {
+		box-shadow: 0 0 12px color.$background-card-hover-shadow-color;
+		border: 1px solid color.$background-card-hover-border-color;
+	}
+
+	.lang {
+		margin: auto;
+		width: 80%;
+		font-size: 20px;
+		color: color.$background-card-text-color;
+	}
+
+	.code {
+		margin: auto;
+		width: 80%;
+		font-size: 12px;
+		color: color.$background-card-text-color;
+		padding: 20px;
+		border: 1px solid color.$background-card-code-border-color;
+		border-right: 1px solid
+			color.$background-card-code-border-highlight-color;
+		border-bottom: 1px solid
+			color.$background-card-code-border-highlight-color;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+	}
+}

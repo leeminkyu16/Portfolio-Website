@@ -1,0 +1,56 @@
+@use "../../styles/component_groups/center/common.scss" as common;
+@use "../../styles/constants/colors" as colors;
+
+.left-bar-main {
+    &__div {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid colors.$divider-color;
+        overflow: auto;
+
+        .resume-text {
+            &__button {
+                color: colors.$dark-primary-text-color;
+                background-color: colors.$dark-primary-background-color;
+                margin: 0;
+                border: none;
+                text-align: start;
+
+                /** Top Right Bottom Left */
+                padding: 1vh 1vw;
+            }
+        }
+
+        .section-text {
+            &__button {
+                color: colors.$dark-primary-text-color;
+                background-color: colors.$dark-primary-background-color;
+                margin: 0;
+                border: none;
+                text-align: start;
+
+                /** Top Right Bottom Left */
+                padding: 1vh 1vw 1vh 2vw;
+            }
+        }
+
+        .subsection-text {
+            &__button {
+                color: colors.$dark-primary-text-color;
+                background-color: colors.$dark-primary-background-color;
+                margin: 0;
+                border: none;
+                text-align: start;
+
+                /** Top Right Bottom Left */
+                padding: 1vh 1vw 1vh 3vw;
+            }
+        }
+    }
+
+    .common {
+        &__button {
+            @include common.general-button;
+        }
+    }
+}

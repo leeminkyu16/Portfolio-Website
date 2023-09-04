@@ -1,0 +1,141 @@
+@use "../../styles/mixins/responsive.scss" as responsive;
+@use "../../styles/constants/colors.scss" as color;
+
+.side-menu {
+	&-main-div {
+		background-color: color.$primary-translucent-background-color;
+		color: color.$primary-text-on-primary-background-color;
+		position: fixed;
+		top: 0;
+		right: 0;
+		height: 100vh;
+		border-left: solid 1px color.$primary-border-color;
+		overflow-y: auto;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+		transition: 0.45s;
+
+		&#{&}-hidden {
+			transform: translateX(100%);
+		}
+
+		h1 {
+			margin-left: 10%;
+		}
+
+		width: 100%;
+
+		@include responsive.is(small) {
+			width: 50%;
+		}
+
+		@include responsive.is(medium) {
+			width: 35%;
+		}
+
+		@include responsive.is(large) {
+			width: 20%;
+		}
+	}
+
+	&-items {
+		flex: 0 0 100%;
+		list-style-type: none;
+		padding-left: 0;
+	}
+
+	&-item {
+		border-top: solid 1px color.$primary-border-color;
+
+		&-button {
+			text-align: left;
+			cursor: pointer;
+			width: 100%;
+			background-color: transparent;
+			border: none;
+			outline: none;
+			color: color.$primary-text-on-primary-background-color;
+			display: block;
+			padding: 3% 5%;
+			font-size: 1rem;
+			line-height: 160%;
+			font-weight: bold;
+		}
+
+		&-2 {
+			border-top: solid 1px color.$primary-border-color;
+			padding-left: 5%;
+		}
+
+		&-3 {
+			border-top: solid 1px color.$primary-border-color;
+			padding-left: 10%;
+		}
+
+		&-top-double-border {
+			border-top: 3px double color.$primary-border-color;
+		}
+	}
+
+	&-button {
+		$button-width: max(50px, 3.5vh);
+		$bar-width: 18px;
+		$bar-height: 2px;
+		$bar-margin: 3px;
+
+		flex: 0 0 auto;
+		width: $button-width;
+		height: $button-width;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 1;
+
+		&-hamburger {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+
+			span {
+				background-color: color.$primary-text-on-primary-background-color;
+				display: block;
+				width: $bar-width;
+				height: $bar-height;
+				margin-bottom: $bar-margin;
+				overflow: hidden;
+				position: relative;
+				-webkit-transition: all 0.3s ease-in-out;
+				-ms-transition: all 0.3s ease-in-out;
+				-o-transition: all 0.3s ease-in-out;
+				transition: all 0.3s ease-in-out;
+			}
+
+			& span:last-child {
+				margin: 0;
+			}
+
+			&.is-active {
+				$transform-distance: $bar-height + $bar-margin;
+
+				@mixin transform($distance) {
+					-webkit-transform: translateY($distance);
+					-ms-transform: translateY($distance);
+					-o-transform: translateY($distance);
+					transform: translateY($distance);
+				}
+
+				:first-child {
+					@include transform($transform-distance);
+				}
+
+				:last-child {
+					@include transform(-$transform-distance);
+				}
+			}
+		}
+	}
+}

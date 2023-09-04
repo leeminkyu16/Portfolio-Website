@@ -1,0 +1,63 @@
+{
+  "name": "portfolio-website-frontend",
+  "private": true,
+  "description": "A simple portfolio website",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "start": "gatsby develop",
+    "start-network": "gatsby develop -H 0.0.0.0",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
+    "lint-code-eslint": "eslint \"src/**/*.{js,jsx,ts,tsx,json,md}\" --fix",
+    "lint-code-prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "lint-style": "stylelint \"src/**/*.scss\" --fix",
+    "lint": "npm run lint-code-eslint && npm run lint-code-prettier && npm run lint-style",
+    "link": "npm link ../shared"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
+    "@tweenjs/tween.js": "^20.0.3",
+    "gatsby": "^5.9.0",
+    "gatsby-plugin-manifest": "^5.8.0",
+    "gatsby-plugin-sass": "^6.9.0",
+    "portfolio-website-shared": "../shared",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "sanitize-html": "^2.10.0",
+    "sass": "^1.62.1",
+    "three": "^0.152.2"
+  },
+  "devDependencies": {
+    "@types/loadable__component": "^5.13.4",
+    "@types/node": "^18.7.19",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "@types/react-helmet": "^6.1.5",
+    "@types/react-redux": "^7.1.24",
+    "@types/sanitize-html": "^2.6.2",
+    "@types/three": "^0.144.0",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-markdown": "^3.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
+    "prettier": "^2.8.8",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "stylelint": "^15.6.1",
+    "stylelint-config-standard-scss": "^9.0.0",
+    "stylelint-prettier": "^3.0.0",
+    "stylelint-scss": "^5.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  }
+}

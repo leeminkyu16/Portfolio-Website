@@ -1,0 +1,36 @@
+// Background Colors
+$primary-background-color: rgba(0 0 0 / 100%);
+$primary-translucent-background-color: rgba(0 0 0 / 50%);
+$primary-translucent-background-hover-color: rgba(50 50 50 / 50%);
+
+// Border Colors
+$primary-border-color: rgba(255 255 255 / 100%);
+
+// Text Colors
+$primary-text-on-primary-background-color: rgba(255 255 255 / 100%);
+$secondary-text-on-primary-background-color: rgba(200 200 200 / 100%);
+
+// Shadow Colors
+$primary-shadow-on-primary-background-color: rgba(149 157 165 / 20%);
+
+// Button Colors
+$primary-button-border-color: $primary-border-color;
+$primary-button-text-color: $primary-text-on-primary-background-color;
+$primary-button-background-color: $primary-translucent-background-color;
+$primary-button-background-hover-color: $primary-translucent-background-hover-color;
+
+// Animated Background Colors
+$background-center-color: rgb(43 45 48 / 100%);
+$background-card-text-color: rgba(127 255 255 / 75%);
+$background-card-shadow-color: rgba(127 255 255 / 25%);
+$background-card-hover-shadow-color: rgba(0 255 255 / 75%);
+$background-card-border-color: rgba(127 255 255 / 25%);
+$background-card-hover-border-color: rgba(127 255 255 / 75%);
+$background-card-code-border-color: rgba(0 0 0 / 100%);
+$background-card-code-border-highlight-color: rgba(53 53 53 / 100%);
+
+// Welcome Card Colors
+$welcome-card-background-color: rgba(28 28 28 / 100%);
+
+// Resume Card Colors
+$resume-card-background-color: rgba(5 5 30 / 90%);

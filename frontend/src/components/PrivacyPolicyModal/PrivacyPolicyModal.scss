@@ -1,0 +1,56 @@
+@use "../../styles/mixins/responsive.scss" as responsive;
+@use "../../styles/mixins/button.scss" as button;
+@use "../../styles/constants/colors.scss" as color;
+
+.privacy-policy-modal__div {
+	background-color: color.$primary-translucent-background-color;
+	color: color.$primary-text-on-primary-background-color;
+	position: fixed;
+	bottom: 2vh;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	border: solid 1px color.$primary-border-color;
+	border-radius: 10px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
+	transition: 0.45s;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5%;
+
+	&#{&}-hidden {
+		transform: translate(-50%, 120%);
+	}
+
+	width: 95%;
+
+	@include responsive.is(small) {
+		width: 85%;
+	}
+
+	@include responsive.is(medium) {
+		width: 70%;
+	}
+
+	@include responsive.is(large) {
+		width: 55%;
+	}
+
+	.title-text {
+		align-self: flex-start;
+		font-size: x-large;
+		margin: 0;
+	}
+
+	.main-text {
+		font-size: medium;
+		margin: 5px 10px 10px;
+	}
+
+	.main-button {
+		@include button.rounded-primary-button;
+	}
+}

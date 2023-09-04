@@ -1,0 +1,14 @@
+@use "../constants/colors.scss" as color;
+
+@mixin rounded-primary-button() {
+	border: solid 1px color.$primary-button-border-color;
+	font-size: medium;
+	background-color: color.$primary-button-background-color;
+	color: color.$primary-button-text-color;
+	border-radius: 20px;
+	padding: 5px;
+
+	&:hover {
+		background-color: color.$primary-button-background-hover-color;
+	}
+}

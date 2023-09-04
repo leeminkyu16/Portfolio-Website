@@ -1,0 +1,90 @@
+@use "../../../styles/constants/colors.scss" as colors;
+@use "../../../styles/component_groups/center/common.scss" as common;
+
+.common {
+    &-label {
+        &__p {
+            @include common.general-label;
+
+            align-self: flex-start;
+
+            &:has(+ .common-item-container__div, + .common-text__input, + .common-text__textarea) {
+                /** Top Right Bottom Left */
+                margin: 1% 1% 0%;
+            }
+        }
+
+        &-header-1__p {
+            @include common.general-label(30px);
+
+            &:has(+ .common-element-container__div) {
+                /** Top Right Bottom Left */
+                margin: 1% 1% 3%;
+            }
+        }
+
+        &-header-2__p {
+            @include common.general-label(25px);
+        }
+
+        &-header-3__p {
+            @include common.general-label(20px);
+        }
+    }
+
+    &-text {
+        &__input {
+            @include common.general-text-input;
+
+            align-self: flex-start;
+        }
+
+        &__textarea {
+            @include common.general-textarea;
+
+            align-self: flex-start;
+        }
+    }
+
+    &-page-container__div {
+        @include common.page-container;
+    }
+
+    &-element-container__div {
+        @include common.element-container;
+
+        .top-right-container__div {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+
+    &-item-container__div {
+        @include common.item-container;
+
+        .top-right-container__div {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+
+    &-dropdown__select {
+        @include common.general-dropdown;
+
+        align-self: flex-start;
+    }
+
+    &__button {
+        @include common.general-button;
+    }
+
+    &-image {
+        &__button {
+            background-color: colors.$dark-secondary-background-color;
+            border-radius: 10px;
+            border: 2px solid colors.$dark-tertiary-background-color;
+        }
+    }
+}

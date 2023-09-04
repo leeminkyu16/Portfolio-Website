@@ -1,0 +1,25 @@
+@use "../../styles/constants/colors.scss" as color;
+
+.background-spacer {
+	@mixin background-spacer-common() {
+		position: relative;
+	}
+
+	&-title {
+		@include background-spacer-common;
+
+		margin: 0;
+		width: 100%;
+		height: 10vh;
+		color: color.$primary-text-on-primary-background-color;
+		text-align: center;
+		font-size: 300%;
+	}
+
+	&-div {
+		@include background-spacer-common;
+
+		height: 85vh;
+		width: 10%;
+	}
+}

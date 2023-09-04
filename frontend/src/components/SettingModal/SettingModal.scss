@@ -1,0 +1,68 @@
+@use "../../styles/mixins/checkbox.scss" as checkboxes;
+@use "../../styles/mixins/responsive.scss" as responsive;
+@use "../../styles/mixins/button.scss" as button;
+@use "../../styles/constants/colors.scss" as color;
+
+.setting-panel {
+	position: fixed;
+	z-index: 1;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	background-color: color.$primary-translucent-background-color;
+	display: grid;
+	align-items: center;
+	justify-items: center;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(8, 1fr);
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+
+	@include responsive.is(small) {
+		width: 85%;
+		height: 85%;
+	}
+
+	@include responsive.is(medium) {
+		width: 70%;
+		height: 70%;
+	}
+
+	@include responsive.is(large) {
+		width: 50%;
+		height: 50%;
+	}
+
+	&__title {
+		color: color.$primary-text-on-primary-background-color;
+		grid-column: span 2;
+	}
+
+	&__subtitle {
+		color: color.$primary-text-on-primary-background-color;
+		grid-column: span 2;
+	}
+
+	&__background {
+		background-color: color.$primary-translucent-background-color;
+		z-index: 2;
+		width: 100%;
+		height: 100%;
+		position: fixed;
+	}
+
+	&__button {
+		grid-column: span 2;
+
+		@include button.rounded-primary-button;
+	}
+
+	&__label {
+		color: color.$primary-text-on-primary-background-color;
+	}
+
+	&__checkbox {
+		@include checkboxes.standard;
+	}
+}

@@ -1,0 +1,32 @@
+@use "sass:map";
+
+$widths: (
+    small: 600px,
+    medium: 900px,
+    large: 1200px,
+);
+$heights: (
+    small: 338px,
+    medium: 506px,
+    large: 675px,
+);
+
+@mixin width-is($breakpoint) {
+    @if map-has-key($map: $widths, $key: $breakpoint) {
+        @media (min-width: map-get($widths, $breakpoint)) {
+            @content;
+        }
+    } @else {
+        @error "Property #{breakpoint} must be small, medium, or large";
+    }
+}
+
+@mixin height-is($breakpoint) {
+    @if map-has-key($map: $heights, $key: $breakpoint) {
+        @media (min-height: map-get($heights, $breakpoint)) {
+            @content;
+        }
+    } @else {
+        @error "Property #{breakpoint} must be small, medium, or large";
+    }
+}

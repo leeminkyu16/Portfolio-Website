@@ -1,0 +1,120 @@
+@use "../../styles/constants/colors.scss" as color;
+
+.resume-card-article {
+	padding: max(5%, 35px);
+	margin: 2%;
+	background-color: color.$resume-card-background-color;
+	color: color.$primary-text-on-primary-background-color;
+	border-radius: 3vh;
+	box-shadow: color.$primary-shadow-on-primary-background-color 0 8px 24px;
+
+	@mixin card-element-margins {
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.heading1-p {
+		@include card-element-margins;
+
+		margin: 3% 0;
+		font-size: 150%;
+		font-weight: bold;
+		color: color.$primary-text-on-primary-background-color;
+	}
+
+	.heading2-p {
+		@include card-element-margins;
+
+		margin-top: 0.5%;
+		margin-bottom: 0.5%;
+		font-size: 125%;
+		font-weight: bold;
+		color: color.$secondary-text-on-primary-background-color;
+	}
+
+	.start-end-date-div {
+		@include card-element-margins;
+
+		display: flex;
+		flex-direction: row;
+		color: color.$secondary-text-on-primary-background-color;
+
+		.date-title {
+			font-weight: bold;
+			margin-right: 2%;
+			margin-top: 0.5%;
+			margin-bottom: 0.5%;
+		}
+
+		.date-content {
+			margin-right: 5%;
+			margin-top: 0.5%;
+			margin-bottom: 0.5%;
+		}
+	}
+
+	.text {
+		&-div {
+			@include card-element-margins;
+
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+
+			@mixin text-div-common {
+				color: color.$primary-text-on-primary-background-color;
+				margin-top: 1%;
+				margin-bottom: 1%;
+			}
+
+			& .title {
+				@include text-div-common;
+
+				font-weight: bold;
+				margin-right: 3%;
+			}
+
+			& .text {
+				@include text-div-common;
+			}
+		}
+
+		&-p {
+			@include card-element-margins;
+
+			color: color.$primary-text-on-primary-background-color;
+			margin-top: 1%;
+			margin-bottom: 1%;
+		}
+	}
+
+	.list {
+		&-title {
+			@include card-element-margins;
+
+			margin-top: 0%;
+			margin-bottom: 0.5%;
+			font-weight: bold;
+		}
+
+		&-ul {
+			@include card-element-margins;
+
+			margin-top: 1%;
+			margin-bottom: 1%;
+
+			.list-li {
+				@include card-element-margins;
+
+				color: color.$primary-text-on-primary-background-color;
+				margin-top: 0.5%;
+				margin-bottom: 0.5%;
+			}
+		}
+	}
+}

@@ -1,0 +1,31 @@
+{
+  "name": "portfolio-website-shared",
+  "version": "0.1.0",
+  "description": "Shared resources for the portfolio website",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "lint-code-eslint": "eslint \"**/*.{js,jsx,ts,tsx,json,md}\" --fix",
+    "lint": "npm run lint-code-eslint"
+  },
+  "author": "Min-Kyu Lee",
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-markdown": "^3.0.0",
+    "prettier": "^2.8.1",
+    "prettier-plugin-organize-imports": "^3.2.1",
+    "typescript": "^5.0.4",
+    "eslint-plugin-prettier": "^4.2.1"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "dependencies": {
+  }
+}

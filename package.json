@@ -1,0 +1,28 @@
+{
+  "name": "portfolio-website",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Portfolio website",
+  "author": "Min-Kyu Lee",
+  "scripts": {
+    "setup-all": "npm run install-all && npm run compile-shared && npm run link-all",
+    "install-all": "conc \"npm i\" \"npm run install-admin\" \"npm run install-frontend\" \"npm run install-shared\"",
+    "install-admin": "cd admin && npm i",
+    "install-frontend": "cd frontend && npm i",
+    "install-shared": "cd shared && npm i",
+    "compile-shared": "cd shared && npm run compile-typescript",
+    "lint-all": "conc \"npm i\" \"npm run lint-admin\" \"npm run lint-frontend\" \"npm run lint-shared\"",
+    "lint-admin": "cd admin && npm run lint",
+    "lint-frontend": "cd frontend && npm run lint",
+    "lint-shared": "cd shared && npm run lint",
+    "link-all": "conc \"npm run link-frontend\" \"npm run link-admin\"",
+    "link-frontend": "cd frontend && npm run link",
+    "link-admin": "cd admin && npm run link"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "gatsby-cli": "^4.7.0",
+    "gatsby-plugin-typescript": "^4.23.0",
+    "typescript": "^4.8.3"
+  }
+}

@@ -1,0 +1,100 @@
+@use "../../styles/mixins/responsive.scss" as responsive;
+@use "../../styles/constants/colors.scss" as color;
+
+.resume-section {
+	min-height: 100vh;
+	position: static;
+	scroll-margin-top: 5vh;
+
+	@mixin main-section-common {
+		margin: 0 auto;
+		display: grid;
+		width: 95%;
+
+		@include responsive.is(small) {
+			width: 85%;
+		}
+
+		@include responsive.is(medium) {
+			width: 70%;
+		}
+
+		@include responsive.is(large) {
+			width: 55%;
+		}
+	}
+
+	.main-section {
+		@include main-section-common;
+
+		grid-template-columns: repeat(1, 1fr);
+
+		&--small {
+			@include main-section-common;
+
+			grid-template-columns: repeat(1, 1fr);
+
+			@include responsive.is(small) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@include responsive.is(medium) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@include responsive.is(large) {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+
+		&--medium {
+			@include main-section-common;
+
+			grid-template-columns: repeat(1, 1fr);
+
+			@include responsive.is(small) {
+				grid-template-columns: repeat(1, 1fr);
+			}
+
+			@include responsive.is(medium) {
+				grid-template-columns: repeat(1, 1fr);
+			}
+
+			@include responsive.is(large) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		&--large {
+			@include main-section-common;
+
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
+
+	&__title {
+		@mixin title-common() {
+			text-align: center;
+			height: 30%;
+			overflow-wrap: break-word;
+		}
+
+		&-1 {
+			@include title-common;
+
+			font-size: 300%;
+			color: color.$primary-text-on-primary-background-color;
+		}
+
+		&-2 {
+			@include title-common;
+
+			font-size: 250%;
+			color: color.$primary-text-on-primary-background-color;
+		}
+	}
+}
+
+.resume-subsection {
+	scroll-margin-top: 2vh;
+}

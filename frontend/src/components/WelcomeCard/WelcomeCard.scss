@@ -1,0 +1,88 @@
+@use "../../styles/constants/colors.scss" as color;
+
+$welcome-card-width: min(30rem, 100%);
+$welcome-card-height: min(15rem, 100%);
+
+.welcome-content {
+	color: color.$primary-text-on-primary-background-color;
+	height: 100vh;
+	position: static;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10;
+}
+
+.welcome-card {
+	perspective: 150rem;
+	height: min($welcome-card-height + 5rem, 100%);
+	width: $welcome-card-width;
+	position: static;
+
+	&__side {
+		height: $welcome-card-height;
+		transition: all 0.8s ease;
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: auto;
+		width: $welcome-card-width;
+		backface-visibility: hidden;
+		border-radius: 10px;
+		overflow: hidden;
+		box-shadow: 0 0 1rem color.$primary-shadow-on-primary-background-color;
+
+		&--front {
+			background-color: color.$welcome-card-background-color;
+		}
+
+		&--back {
+			transform: rotateY(180deg);
+			background-color: color.$welcome-card-background-color;
+		}
+	}
+
+	&:hover &__side--front {
+		transform: rotateY(-180deg);
+	}
+
+	&:hover &__side--back {
+		transform: rotateY(0deg);
+	}
+
+	&__container {
+		@mixin container-common {
+			height: $welcome-card-height;
+			background-color: color.$welcome-card-background-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		&--front {
+			@include container-common;
+
+			flex-direction: column;
+		}
+
+		&--back {
+			@include container-common;
+
+			.icon-container {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+			}
+
+			flex-direction: column;
+		}
+	}
+
+	&__button {
+		background-color: color.$welcome-card-background-color;
+		margin: max(5vh, 50px);
+		width: max(5vh, 50px);
+		height: max(5vh, 50px);
+	}
+}

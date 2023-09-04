@@ -1,0 +1,28 @@
+@import "../styles/constants/colors";
+
+* {
+    outline: none;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.application-main {
+    &-left-right {
+        &__div {
+            background-color: $dark-primary-background-color;
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    &-top-bottom {
+        &__div {
+            background-color: $dark-primary-background-color;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
