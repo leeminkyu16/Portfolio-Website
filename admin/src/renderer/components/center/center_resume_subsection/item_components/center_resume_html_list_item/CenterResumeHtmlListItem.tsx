@@ -1,5 +1,5 @@
 import { ObjectResumeHtmlListItem, ObjectResumeHtmlListItemProper } from "portfolio-website-shared";
-import React, { FunctionComponent, RefObject, createRef, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { generateUniqueId } from "../../../shared/functions/generate_unique_id";
 import { CenterResumeHtmlListItemProps } from "./CenterResumeHtmlListItemProps";
 import { ElementTopRightButtons } from "../../../shared/components/ElementTopRightButtons";
@@ -7,111 +7,105 @@ import { ElementTopRightButtons } from "../../../shared/components/ElementTopRig
 const CenterResumeHtmlListItem: FunctionComponent<CenterResumeHtmlListItemProps> = (
 	props: CenterResumeHtmlListItemProps,
 ): JSX.Element => {
-	const listUpdateObjectFunctions: (() => void)[] = [];
-	const [htmlListItemState, setHtmlListItemState] = useState<ObjectResumeHtmlListItem>(
-		props.htmlListItem,
-	);
+	const { htmlListItem } = props;
 
-	props.addUpdateObjectFunction((): void => {
-		listUpdateObjectFunctions.forEach((updateObjectFunction: () => void): void => {
-			updateObjectFunction();
-		});
-		props.setObjectFunction(htmlListItemState);
-	});
+	const updateElement = (
+		htmlListItemProperIndex: number,
+		htmlListItemProper: ObjectResumeHtmlListItemProper,
+	): void => {
+		props.onChange(
+			htmlListItem.map(
+				(
+					element: ObjectResumeHtmlListItemProper,
+					index: number,
+				): ObjectResumeHtmlListItemProper =>
+					index === htmlListItemProperIndex ? htmlListItemProper : element,
+			),
+		);
+	};
 
 	return (
 		<>
 			<p className="common-label-header-3__p">HTML List</p>
-			{htmlListItemState.map(
+			{htmlListItem.map(
 				(
 					htmlListItemProper: ObjectResumeHtmlListItemProper,
 					htmlListItemProperIndex: number,
-				): JSX.Element => {
-					const itemProperCopy: ObjectResumeHtmlListItemProper = htmlListItemProper;
+				): JSX.Element => (
+					<div className="common-item-container__div" key={htmlListItemProper.uniqueId}>
+						<ElementTopRightButtons
+							listState={htmlListItem}
+							setListState={props.onChange}
+							elementIndex={htmlListItemProperIndex}
+						/>
+						<p className="common-label__p">Unique Id:</p>
+						<input
+							className="common-text__input"
+							type="number"
+							value={htmlListItemProper.uniqueId}
+							onChange={(event): void =>
+								updateElement(htmlListItemProperIndex, {
+									...htmlListItemProper,
+									uniqueId: parseInt(event.target.value, 10) || 0,
+								})
+							}
+							aria-label="HTML list element Unique Id"
+						/>
 
-					const uniqueIdInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const textEnglishTextArea: RefObject<HTMLTextAreaElement> = createRef<HTMLTextAreaElement>();
-					const textFrenchTextArea: RefObject<HTMLTextAreaElement> = createRef<HTMLTextAreaElement>();
-
-					listUpdateObjectFunctions.push((): void => {
-						if (
-							uniqueIdInput.current !== null &&
-							uniqueIdInput.current.value !== undefined
-						) {
-							itemProperCopy.uniqueId = parseInt(uniqueIdInput.current.value, 10);
-						}
-						if (
-							textEnglishTextArea.current !== null &&
-							textEnglishTextArea.current.value !== undefined
-						) {
-							itemProperCopy.htmlText.english = textEnglishTextArea.current.value;
-						}
-						if (
-							textFrenchTextArea.current !== null &&
-							textFrenchTextArea.current.value !== undefined
-						) {
-							itemProperCopy.htmlText.french = textFrenchTextArea.current.value;
-						}
-					});
-
-					return (
-						<div
-							className="common-item-container__div"
-							key={htmlListItemProper.uniqueId}
-						>
-							<ElementTopRightButtons
-								listState={htmlListItemState}
-								setListState={setHtmlListItemState}
-								elementIndex={htmlListItemProperIndex}
-							/>
-							<p className="common-label__p">Unique Id:</p>
-							<input
-								className="common-text__input"
-								type="number"
-								defaultValue={htmlListItemProper.uniqueId}
-								ref={uniqueIdInput}
+						<p className="common-label__p">Text:</p>
+						<div className="common-item-container__div">
+							<p className="common-label__p">English:</p>
+							<textarea
+								className="common-text__textarea"
+								value={htmlListItemProper.htmlText.english}
+								onChange={(event): void =>
+									updateElement(htmlListItemProperIndex, {
+										...htmlListItemProper,
+										htmlText: {
+											...htmlListItemProper.htmlText,
+											english: event.target.value,
+										},
+									})
+								}
+								aria-label="HTML list text (English)"
 							/>
 
-							<p className="common-label__p">Text:</p>
-							<div className="common-item-container__div">
-								<p className="common-label__p">English:</p>
-								<textarea
-									className="common-text__textarea"
-									defaultValue={htmlListItemProper.htmlText.english}
-									ref={textEnglishTextArea}
-								/>
-
-								<p className="common-label__p">Français:</p>
-								<textarea
-									className="common-text__textarea"
-									defaultValue={htmlListItemProper.htmlText.french}
-									ref={textFrenchTextArea}
-								/>
-							</div>
+							<p className="common-label__p">Français:</p>
+							<textarea
+								className="common-text__textarea"
+								value={htmlListItemProper.htmlText.french}
+								onChange={(event): void =>
+									updateElement(htmlListItemProperIndex, {
+										...htmlListItemProper,
+										htmlText: {
+											...htmlListItemProper.htmlText,
+											french: event.target.value,
+										},
+									})
+								}
+								aria-label="HTML list text (French)"
+							/>
 						</div>
-					);
-				},
+					</div>
+				),
 			)}
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					setHtmlListItemState(
-						(oldListItem: ObjectResumeHtmlListItem): ObjectResumeHtmlListItem => {
-							return [
-								...oldListItem,
-								{
-									uniqueId: generateUniqueId(
-										oldListItem.map(
-											(element: ObjectResumeHtmlListItemProper): number =>
-												element.uniqueId,
-										),
-									),
-									htmlText: { english: "", french: "" },
-								},
-							];
+					props.onChange([
+						...htmlListItem,
+						{
+							uniqueId: generateUniqueId(
+								htmlListItem.map(
+									(element: ObjectResumeHtmlListItemProper): number =>
+										element.uniqueId,
+								),
+							),
+							htmlText: { english: "", french: "" },
 						},
-					);
+					]);
 				}}
 			>
 				Add Element to HTML List

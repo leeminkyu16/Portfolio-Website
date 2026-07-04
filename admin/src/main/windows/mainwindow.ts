@@ -4,8 +4,13 @@ import url from "url";
 
 export default function createMainWindow(isPackaged: boolean): BrowserWindow {
 	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1200,
+		height: 800,
+		minWidth: 640,
+		minHeight: 480,
+		title: "Portfolio Website Admin",
+		backgroundColor: "#070715",
+		show: false,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
@@ -13,8 +18,13 @@ export default function createMainWindow(isPackaged: boolean): BrowserWindow {
 		},
 	});
 
+	// Avoid a white flash before the renderer paints; reveal once ready.
+	win.once("ready-to-show", () => {
+		win.show();
+	});
+
 	if (process.env.NODE_ENV !== "production") {
-		process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "1"; // eslint-disable-line require-atomic-updates
+		process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "1";
 		win.loadURL(`http://localhost:2003`);
 	} else {
 		win.loadURL(

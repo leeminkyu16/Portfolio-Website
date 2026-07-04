@@ -2,89 +2,122 @@
 @use "../../../styles/component_groups/center/common.scss" as common;
 
 .common {
-    &-label {
-        &__p {
-            @include common.general-label;
+	&-label {
+		&__p {
+			@include common.general-label;
 
-            align-self: flex-start;
+			align-self: flex-start;
 
-            &:has(+ .common-item-container__div, + .common-text__input, + .common-text__textarea) {
-                /** Top Right Bottom Left */
-                margin: 1% 1% 0%;
-            }
-        }
+			&:has(+ .common-item-container__div, + .common-text__input, + .common-text__textarea) {
+				/** Top Right Bottom Left */
+				margin: 1% 1% 0%;
+			}
+		}
 
-        &-header-1__p {
-            @include common.general-label(30px);
+		&-header-1__p {
+			@include common.general-label(30px);
 
-            &:has(+ .common-element-container__div) {
-                /** Top Right Bottom Left */
-                margin: 1% 1% 3%;
-            }
-        }
+			color: colors.$dark-primary-text-color;
+			font-weight: 600;
 
-        &-header-2__p {
-            @include common.general-label(25px);
-        }
+			&:has(+ .common-element-container__div) {
+				/** Top Right Bottom Left */
+				margin: 1% 1% 3%;
+			}
+		}
 
-        &-header-3__p {
-            @include common.general-label(20px);
-        }
-    }
+		&-header-2__p {
+			@include common.general-label(25px);
+		}
 
-    &-text {
-        &__input {
-            @include common.general-text-input;
+		&-header-3__p {
+			@include common.general-label(13px);
 
-            align-self: flex-start;
-        }
+			align-self: stretch;
+			margin: 0 0 6px;
+			padding-bottom: 6px;
+			font-weight: 600;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: colors.$dark-secondary-text-color;
+			border-bottom: 1px solid colors.$dark-tertiary-background-color;
+		}
+	}
 
-        &__textarea {
-            @include common.general-textarea;
+	&-text {
+		&__input {
+			@include common.general-text-input;
 
-            align-self: flex-start;
-        }
-    }
+			align-self: flex-start;
+		}
 
-    &-page-container__div {
-        @include common.page-container;
-    }
+		&__textarea {
+			@include common.general-textarea;
 
-    &-element-container__div {
-        @include common.element-container;
+			align-self: flex-start;
+		}
+	}
 
-        .top-right-container__div {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-    }
+	&-page-container__div {
+		@include common.page-container;
+	}
 
-    &-item-container__div {
-        @include common.item-container;
+	&-element-container__div {
+		@include common.element-container;
 
-        .top-right-container__div {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-    }
+		.top-right-container__div {
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+	}
 
-    &-dropdown__select {
-        @include common.general-dropdown;
+	&-item-container__div {
+		@include common.item-container;
 
-        align-self: flex-start;
-    }
+		.top-right-container__div {
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+	}
 
-    &__button {
-        @include common.general-button;
-    }
+	&-dropdown__select {
+		@include common.general-dropdown;
 
-    &-image {
-        &__button {
-            background-color: colors.$dark-secondary-background-color;
-            border-radius: 10px;
-            border: 2px solid colors.$dark-tertiary-background-color;
-        }
-    }
+		align-self: flex-start;
+	}
+
+	&__button {
+		@include common.general-button;
+	}
+
+	&-empty__p {
+		margin: 2% 0;
+		font-size: 15px;
+		font-style: italic;
+		color: colors.$dark-secondary-text-color;
+		opacity: 0.75;
+		text-align: center;
+	}
+
+	&-image {
+		&__button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 6px;
+			background-color: colors.$dark-secondary-background-color;
+			border-radius: 8px;
+			border: 2px solid colors.$dark-tertiary-background-color;
+			transition:
+				background-color 0.12s ease,
+				border-color 0.12s ease;
+
+			&:hover {
+				background-color: colors.$dark-quaternary-background-color;
+				border-color: colors.$dark-highlighted-border-color;
+			}
+		}
+	}
 }

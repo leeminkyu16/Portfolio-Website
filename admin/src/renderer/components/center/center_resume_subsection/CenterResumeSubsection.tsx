@@ -1,5 +1,5 @@
-import React, { FunctionComponent, RefObject, createRef, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { FunctionComponent } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	ObjectResumeItem,
 	ObjectResumeItemBundle,
@@ -14,7 +14,6 @@ import {
 	ObjectResumeHtmlTextItem,
 	ObjectResumeSubsectionData,
 } from "portfolio-website-shared";
-import { mapDispatchToProps, mapStateToProps } from "./component_redux_functions";
 import { CenterResumeSubsectionProps } from "./CenterResumeSubsectionProps";
 import CenterResumeHeading1Item from "./item_components/center_resume_heading_1_item/CenterResumeHeading1Item";
 import CenterResumeHeading1WithLinkItem from "./item_components/center_resume_heading_1_with_link_item/CenterResumeHeading1WithLinkItem";
@@ -27,239 +26,294 @@ import CenterResumeListItem from "./item_components/center_resume_list_item/Cent
 import CenterResumeHtmlListItem from "./item_components/center_resume_html_list_item/CenterResumeHtmlListItem";
 import { generateDefaultItemBundle } from "./other_functions/generate_default_item_bundle";
 import { ElementTopRightButtons } from "../shared/components/ElementTopRightButtons";
+import { resumeActions } from "../../../store/components/resume/resumeSlice";
+import { centerViewActions } from "../../../store/components/center_view/centerViewSlice";
+import { RootState } from "../../../store/RootState";
 import "./CenterResumeSubsection.scss";
 
-const CenterResumeSubsection: FunctionComponent<CenterResumeSubsectionProps> = (
-	props: CenterResumeSubsectionProps,
-): JSX.Element => {
-	const updateObjectFunctions: Map<[number, number], () => void> = new Map<
-		[number, number],
-		() => void
-	>();
-
-	const syncState = (): void => {
-		updateObjectFunctions.forEach((updateFunction: () => void): void => {
-			updateFunction();
-		});
-	};
-
-	useEffect((): void => {
-		props.setSyncResumeAction(syncState);
-	}, [props.setSyncResumeAction, updateObjectFunctions, syncState]);
+const CenterResumeSubsection: FunctionComponent<CenterResumeSubsectionProps> = (): JSX.Element => {
+	const dispatch = useDispatch();
+	const resumeSectionIndex = useSelector(
+		(state: RootState) => state.centerViewState.sectionIndex,
+	);
+	const resumeSubsectionIndex = useSelector(
+		(state: RootState) => state.centerViewState.subsectionIndex,
+	);
+	const resumeSubsection = useSelector(
+		(state: RootState) =>
+			state.resume.value[state.centerViewState.sectionIndex].data[
+				state.centerViewState.subsectionIndex
+			],
+	);
 
 	const setResumeSubsectionDataState = (
 		newResumeSubsectionData: ObjectResumeSubsectionData,
 	): void => {
-		props.setResumeSubsectionDataAction(
-			props.resumeSectionIndex,
-			props.resumeSubsectionIndex,
-			newResumeSubsectionData,
+		dispatch(
+			resumeActions.setResumeSubsectionData({
+				sectionIndex: resumeSectionIndex,
+				subsectionIndex: resumeSubsectionIndex,
+				subsectionData: newResumeSubsectionData,
+			}),
 		);
+	};
+
+	const updateItemBundle = (
+		itemBundleIndex: number,
+		itemBundle: ObjectResumeItemBundle,
+	): void => {
+		setResumeSubsectionDataState(
+			resumeSubsection.data.map(
+				(bundle: ObjectResumeItemBundle, index: number): ObjectResumeItemBundle =>
+					index === itemBundleIndex ? itemBundle : bundle,
+			),
+		);
+	};
+
+	const updateItem = (
+		itemBundleIndex: number,
+		resumeItemIndex: number,
+		newResumeItem: ObjectResumeItem,
+	): void => {
+		const itemBundle = resumeSubsection.data[itemBundleIndex];
+		updateItemBundle(itemBundleIndex, {
+			...itemBundle,
+			resumeItems: itemBundle.resumeItems.map(
+				(item: ObjectResumeItem, index: number): ObjectResumeItem =>
+					index === resumeItemIndex ? newResumeItem : item,
+			),
+		});
 	};
 
 	return (
 		<div className="common-page-container__div">
-			<p className="common-label-header-1__p">{props.resumeSubsection.title.english}</p>
+			<p className="common-label-header-1__p">{resumeSubsection.title.english}</p>
 
-			{props.resumeSubsection.data.map(
-				(itemBundle: ObjectResumeItemBundle, itemBundleIndex: number): JSX.Element => {
-					const itemBundleCopy: ObjectResumeItemBundle = itemBundle;
+			{resumeSubsection.data.map(
+				(itemBundle: ObjectResumeItemBundle, itemBundleIndex: number): JSX.Element => (
+					<div className="common-element-container__div" key={itemBundle.uniqueId}>
+						<ElementTopRightButtons
+							listState={resumeSubsection.data}
+							setListState={setResumeSubsectionDataState}
+							elementIndex={itemBundleIndex}
+						/>
 
-					const uniqueIdInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
+						<p className="common-label__p">Unique Id:</p>
+						<input
+							className="common-text__input"
+							type="number"
+							aria-label="Unique Id"
+							value={itemBundle.uniqueId}
+							onChange={(event): void =>
+								updateItemBundle(itemBundleIndex, {
+									...itemBundle,
+									uniqueId: parseInt(event.target.value, 10) || 0,
+								})
+							}
+						/>
 
-					updateObjectFunctions.set([-1, -1], (): void => {
-						if (
-							uniqueIdInput.current !== null &&
-							uniqueIdInput.current.value !== undefined
-						) {
-							itemBundleCopy.uniqueId = parseInt(uniqueIdInput.current.value, 10);
-						}
-					});
+						{itemBundle.resumeItems.map(
+							(
+								resumeItem: ObjectResumeItem,
+								resumeItemIndex: number,
+							): JSX.Element => (
+								<div
+									className="common-item-container__div"
+									key={resumeSubsection.template[resumeItemIndex].uniqueId}
+								>
+									{((): JSX.Element => {
+										switch (
+											resumeSubsection.template[resumeItemIndex].itemType
+										) {
+											case "Heading1":
+												return (
+													<CenterResumeHeading1Item
+														heading1Item={
+															resumeItem as ObjectResumeHeading1Item
+														}
+														onChange={(
+															newItem: ObjectResumeHeading1Item,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "Heading1WithLink":
+												return (
+													<CenterResumeHeading1WithLinkItem
+														heading1WithLinkItem={
+															resumeItem as ObjectResumeHeading1WithLinkItem
+														}
+														onChange={(
+															newItem: ObjectResumeHeading1WithLinkItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "Heading2":
+												return (
+													<CenterResumeHeading2Item
+														heading2Item={
+															resumeItem as ObjectResumeHeading2Item
+														}
+														onChange={(
+															newItem: ObjectResumeHeading2Item,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "StartEndDate":
+												return (
+													<CenterResumeStartEndDateItem
+														startEndDateItem={
+															resumeItem as ObjectResumeStartEndDateItem
+														}
+														onChange={(
+															newItem: ObjectResumeStartEndDateItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "Text":
+												return (
+													<CenterResumeTextItem
+														textItem={
+															resumeItem as ObjectResumeTextItem
+														}
+														onChange={(
+															newItem: ObjectResumeTextItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "HTMLText":
+												return (
+													<CenterResumeHtmlTextItem
+														htmlTextItem={
+															resumeItem as ObjectResumeHtmlTextItem
+														}
+														onChange={(
+															newItem: ObjectResumeHtmlTextItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "TextTitlePair":
+												return (
+													<CenterResumeTextTitlePairItem
+														textTitlePairItem={
+															resumeItem as ObjectResumeTextTitlePairItem
+														}
+														textTitlePairTemplateItem={
+															resumeSubsection.template[
+																resumeItemIndex
+															]
+														}
+														onChange={(
+															newItem: ObjectResumeTextTitlePairItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "List":
+												return (
+													<CenterResumeListItem
+														listItem={
+															resumeItem as ObjectResumeListItem
+														}
+														onChange={(
+															newItem: ObjectResumeListItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											case "HTMLList":
+												return (
+													<CenterResumeHtmlListItem
+														htmlListItem={
+															resumeItem as ObjectResumeHtmlListItem
+														}
+														onChange={(
+															newItem: ObjectResumeHtmlListItem,
+														): void =>
+															updateItem(
+																itemBundleIndex,
+																resumeItemIndex,
+																newItem,
+															)
+														}
+													/>
+												);
+											default:
+												return <>Default</>;
+										}
+									})()}
+								</div>
+							),
+						)}
+					</div>
+				),
+			)}
 
-					return (
-						<div className="common-element-container__div" key={itemBundle.uniqueId}>
-							<ElementTopRightButtons
-								listState={props.resumeSubsection.data}
-								setListState={setResumeSubsectionDataState}
-								elementIndex={itemBundleIndex}
-							/>
-
-							<p className="common-label__p">Unique Id:</p>
-							<input
-								className="common-text__input"
-								type="number"
-								defaultValue={itemBundle.uniqueId}
-								ref={uniqueIdInput}
-							/>
-
-							{itemBundle.resumeItems.map(
-								(
-									resumeItem: ObjectResumeItem,
-									resumeItemIndex: number,
-								): JSX.Element => {
-									const addUpdateObjectFunction = (
-										updateObjectFunction: () => void,
-									): void => {
-										updateObjectFunctions.set(
-											[resumeItemIndex, itemBundleIndex],
-											updateObjectFunction,
-										);
-									};
-									const setObjectFunction = (
-										newObjectItem: ObjectResumeItem,
-									): void => {
-										itemBundleCopy.resumeItems[resumeItemIndex] = newObjectItem;
-									};
-
-									return (
-										<div
-											className="common-item-container__div"
-											key={
-												props.resumeSubsection.template[resumeItemIndex]
-													.uniqueId
-											}
-										>
-											{((): JSX.Element => {
-												switch (
-													props.resumeSubsection.template[resumeItemIndex]
-														.itemType
-												) {
-													case "Heading1":
-														return (
-															<CenterResumeHeading1Item
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																heading1Item={
-																	resumeItem as ObjectResumeHeading1Item
-																}
-															/>
-														);
-													case "Heading1WithLink":
-														return (
-															<CenterResumeHeading1WithLinkItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																heading1WithLinkItem={
-																	resumeItem as ObjectResumeHeading1WithLinkItem
-																}
-															/>
-														);
-													case "Heading2":
-														return (
-															<CenterResumeHeading2Item
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																heading2Item={
-																	resumeItem as ObjectResumeHeading2Item
-																}
-															/>
-														);
-													case "StartEndDate":
-														return (
-															<CenterResumeStartEndDateItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																startEndDateItem={
-																	resumeItem as ObjectResumeStartEndDateItem
-																}
-															/>
-														);
-													case "Text":
-														return (
-															<CenterResumeTextItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																textItem={
-																	resumeItem as ObjectResumeTextItem
-																}
-															/>
-														);
-													case "HTMLText":
-														return (
-															<CenterResumeHtmlTextItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																htmlTextItem={
-																	resumeItem as ObjectResumeHtmlTextItem
-																}
-															/>
-														);
-													case "TextTitlePair":
-														return (
-															<CenterResumeTextTitlePairItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																textTitlePairItem={
-																	resumeItem as ObjectResumeTextTitlePairItem
-																}
-																textTitlePairTemplateItem={
-																	props.resumeSubsection.template[
-																		resumeItemIndex
-																	]
-																}
-															/>
-														);
-													case "List":
-														return (
-															<CenterResumeListItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																setObjectFunction={
-																	setObjectFunction
-																}
-																listItem={
-																	resumeItem as ObjectResumeListItem
-																}
-															/>
-														);
-													case "HTMLList":
-														return (
-															<CenterResumeHtmlListItem
-																addUpdateObjectFunction={
-																	addUpdateObjectFunction
-																}
-																setObjectFunction={
-																	setObjectFunction
-																}
-																htmlListItem={
-																	resumeItem as ObjectResumeHtmlListItem
-																}
-															/>
-														);
-													default:
-														return <>Default</>;
-												}
-											})()}
-										</div>
-									);
-								},
-							)}
-						</div>
-					);
-				},
+			{resumeSubsection.data.length === 0 && (
+				<p className="common-empty__p">No item bundles yet. Add one below.</p>
 			)}
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					props.setResumeSubsectionDataAction(
-						props.resumeSectionIndex,
-						props.resumeSubsectionIndex,
-						[
-							...props.resumeSubsection.data,
-							generateDefaultItemBundle(
-								props.resumeSubsection.data,
-								props.resumeSubsection.template,
-							),
-						],
+					dispatch(
+						resumeActions.setResumeSubsectionData({
+							sectionIndex: resumeSectionIndex,
+							subsectionIndex: resumeSubsectionIndex,
+							subsectionData: [
+								...resumeSubsection.data,
+								generateDefaultItemBundle(
+									resumeSubsection.data,
+									resumeSubsection.template,
+								),
+							],
+						}),
 					);
 				}}
 			>
@@ -268,10 +322,9 @@ const CenterResumeSubsection: FunctionComponent<CenterResumeSubsectionProps> = (
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					syncState();
-
-					props.setCenterViewSubsectionIndexAction(-1);
+					dispatch(centerViewActions.setSubsectionIndex(-1));
 				}}
 			>
 				Go Back
@@ -280,4 +333,4 @@ const CenterResumeSubsection: FunctionComponent<CenterResumeSubsectionProps> = (
 	);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CenterResumeSubsection);
+export default CenterResumeSubsection;

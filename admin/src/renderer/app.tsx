@@ -11,9 +11,10 @@ try {
 
 // Create main element
 const mainElement = document.createElement("div");
+mainElement.id = "root";
 document.body.appendChild(mainElement);
 
-const root = ReactDOM.createRoot(mainElement)
+const root = ReactDOM.createRoot(mainElement);
 // Render component
 root.render(
 	<Provider store={store}>

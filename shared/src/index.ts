@@ -1,4 +1,5 @@
 import resumeArray from "./assets/resume/index";
+import { generateDefaultObjectResume } from "./functions/generate_default_object_resume/GenerateDefaultObjectResume";
 import { listToObjectResume } from "./functions/list_to_object_resume/ListToObjectResume";
 import { listToObjectResumeItemBundle } from "./functions/list_to_object_resume/ListToObjectResumeItemBundle";
 import { listToObjectResumeSection } from "./functions/list_to_object_resume/ListToObjectResumeSection";
@@ -29,18 +30,13 @@ import { objectToListFileResumeSection } from "./functions/object_to_list_file_r
 import { objectToListFileResumeSubsection } from "./functions/object_to_list_file_resume/ObjectToListFileResumeSubsection";
 import { objectToListFileResumeSubsectionData } from "./functions/object_to_list_file_resume/ObjectToListFileResumeSubsectionData";
 import { objectToListFileResumeSubsectionTemplate } from "./functions/object_to_list_file_resume/ObjectToListFileResumeSubsectionTemplate";
-import { objectToListFileResumeHeading1Item } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHeading1Item";
-import { objectToListFileResumeHeading1WithLinkItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHeading1WithLinkItem";
-import { objectToListFileResumeHeading2Item } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHeading2Item";
-import { objectToListFileResumeHtmlListItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHtmlListItem";
-import { objectToListFileResumeHtmlListItemProper } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHtmlListItemProper";
-import { objectToListFileResumeHtmlTextItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeHtmlTextItem";
-import { objectToListFileResumeItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeItem";
-import { objectToListFileResumeListItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeListItem";
-import { objectToListFileResumeListItemProper } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeListItemProper";
-import { objectToListFileResumeStartEndDateItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeStartEndDateItem";
-import { objectToListFileResumeTextItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeTextItem";
-import { objectToListFileResumeTextTitlePairItem } from "./functions/object_to_list_file_resume/items/ObjectToListFileResumeTextTitlePairItem";
+import { objectToListResume } from "./functions/object_to_list_resume/ObjectToListResume";
+import { objectToListResumeSection } from "./functions/object_to_list_resume/ObjectToListResumeSection";
+import { objectToListResumeSubsection } from "./functions/object_to_list_resume/ObjectToListResumeSubsection";
+import { objectToListResumeSubsectionData } from "./functions/object_to_list_resume/ObjectToListResumeSubsectionData";
+import { objectToListResumeSubsectionTemplate } from "./functions/object_to_list_resume/ObjectToListResumeSubsectionTemplate";
+import { objectToListInternationalizedString } from "./functions/object_to_list_resume/general/ObjectToListResumeInternationalizedString";
+import { objectToListResumeItem } from "./functions/object_to_list_resume/items/ObjectToListResumeItem";
 
 import { ListResume } from "./types/list_resume/ListResume";
 import { ListResumeItemBundle } from "./types/list_resume/ListResumeItemBundle";
@@ -135,19 +131,16 @@ export { listToObjectResumeSubsectionData };
 export { listToObjectResumeSubsectionTemplate };
 export { listToObjectResumeSubsectionTemplateItem };
 export { listToObjectResumeSubsectionTitle };
-// Functions (Object to List File Resume / Items)
-export { objectToListFileResumeHeading1Item };
-export { objectToListFileResumeHeading1WithLinkItem };
-export { objectToListFileResumeHeading2Item };
-export { objectToListFileResumeHtmlListItem };
-export { objectToListFileResumeHtmlListItemProper };
-export { objectToListFileResumeHtmlTextItem };
-export { objectToListFileResumeItem };
-export { objectToListFileResumeListItem };
-export { objectToListFileResumeListItemProper };
-export { objectToListFileResumeStartEndDateItem };
-export { objectToListFileResumeTextItem };
-export { objectToListFileResumeTextTitlePairItem };
+// Functions (Generate Default Object Resume)
+export { generateDefaultObjectResume };
+// Functions (Object to List Resume — value converters)
+export { objectToListInternationalizedString };
+export { objectToListResumeItem };
+export { objectToListResumeSubsectionData };
+export { objectToListResumeSubsectionTemplate };
+export { objectToListResumeSubsection };
+export { objectToListResumeSection };
+export { objectToListResume };
 // Functions (Object to List File Resume)
 export { objectToListFileResume };
 export { objectToListFileResumeSection };

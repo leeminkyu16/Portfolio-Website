@@ -1,28 +1,58 @@
 @import "../styles/constants/colors";
 
-* {
-    outline: none;
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+	height: 100%;
 }
 
 body {
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	color: $dark-primary-text-color;
+}
+
+/* Remove the default focus ring only for pointer interactions; keep a visible
+   ring for keyboard users so the app stays navigable without a mouse. */
+:focus:not(:focus-visible) {
+	outline: none;
+}
+
+:focus-visible {
+	outline: 2px solid $dark-highlighted-border-color;
+	outline-offset: 2px;
+}
+
+button {
+	cursor: pointer;
+	font-family: inherit;
 }
 
 .application-main {
-    &-left-right {
-        &__div {
-            background-color: $dark-primary-background-color;
-            display: flex;
-            flex-direction: row;
-        }
-    }
+	&-left-right {
+		&__div {
+			background-color: $dark-primary-background-color;
+			display: flex;
+			flex: 1 1 auto;
+			flex-direction: row;
+			min-height: 0;
+		}
+	}
 
-    &-top-bottom {
-        &__div {
-            background-color: $dark-primary-background-color;
-            display: flex;
-            flex-direction: column;
-        }
-    }
+	&-top-bottom {
+		&__div {
+			background-color: $dark-primary-background-color;
+			display: flex;
+			height: 100%;
+			flex-direction: column;
+		}
+	}
 }

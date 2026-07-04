@@ -1,0 +1,540 @@
+// Canvas and scene wrapper
+.galaxy-canvas-wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #050510;
+	z-index: 0;
+	transition: filter 0.4s ease;
+
+	&.galaxy-scene--dimmed {
+		filter: brightness(0.55);
+	}
+
+	// Three.js injects its canvas here
+	canvas {
+		display: block;
+		touch-action: manipulation; // removes 300ms tap delay on mobile
+	}
+
+	// CSS3DRenderer div sits on top of canvas
+	> div:last-child {
+		position: absolute;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+	}
+
+	// Cinematic edge vignette drawn over the rendered scene (below the HUD,
+	// which lives in a later-stacked overlay). Focuses the eye on center and
+	// deepens the sense of looking into a void.
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: radial-gradient(
+			ellipse 82% 82% at 50% 48%,
+			transparent 50%,
+			rgb(3 3 12 / 62%) 100%
+		);
+	}
+}
+
+// Shown while Three.js bundle is loading; removed from DOM by init()
+.galaxy-loading {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgb(200 200 220 / 35%);
+	font-size: 0.75rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	pointer-events: none;
+	animation: galaxy-loading-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes galaxy-loading-pulse {
+	0%,
+	100% {
+		opacity: 0.35;
+	}
+
+	50% {
+		opacity: 0.9;
+	}
+}
+
+// HUD overlay
+.galaxy-hud {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 5;
+
+	* {
+		pointer-events: auto;
+	}
+}
+
+.galaxy-hud-top-left {
+	position: absolute;
+	top: 1.2rem;
+	left: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.galaxy-hud-top-right {
+	position: absolute;
+	top: 1.2rem;
+	right: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.5rem;
+}
+
+.galaxy-hud-bottom-center {
+	position: absolute;
+	bottom: 1.5rem;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.galaxy-sidebar__subsection-sep {
+	padding: 0.3rem 0.6rem 0.1rem;
+	margin-top: 0.35rem;
+	font-size: 0.6rem;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: rgb(180 180 200 / 45%);
+	cursor: default;
+	list-style: none;
+}
+
+// Item list for the active cluster
+.galaxy-sidebar {
+	position: absolute;
+	top: 5.5rem;
+	bottom: 3.5rem;
+	left: 1.2rem;
+	width: 230px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	background: linear-gradient(
+		160deg,
+		rgb(14 16 40 / 62%) 0%,
+		rgb(5 6 22 / 68%) 100%
+	);
+	border: 1px solid rgb(150 170 255 / 16%);
+	border-radius: 12px;
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	box-shadow:
+		0 16px 44px rgb(0 0 0 / 45%),
+		inset 0 1px 0 rgb(255 255 255 / 8%);
+	padding: 0.4rem;
+	box-sizing: border-box;
+	scrollbar-width: thin;
+	scrollbar-color: rgb(150 170 255 / 35%) transparent;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgb(150 170 255 / 30%);
+		border-radius: 3px;
+	}
+}
+
+.galaxy-sidebar__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	&--hidden {
+		display: none;
+	}
+}
+
+.galaxy-sidebar__section-title {
+	padding: 0.4rem 0.6rem 0.3rem;
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	opacity: 0.75;
+	cursor: default;
+	border-bottom: 1px solid rgb(255 255 255 / 7%);
+	margin-bottom: 0.2rem;
+	list-style: none;
+}
+
+.galaxy-sidebar__item {
+	padding: 0.45rem 0.6rem;
+	margin-bottom: 0.15rem;
+	border-radius: 5px;
+	border-left: 3px solid transparent;
+	font-size: 0.78rem;
+	cursor: pointer;
+	color: rgb(220 220 235 / 75%);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition:
+		background 0.15s,
+		color 0.15s;
+
+	&:hover {
+		background: rgb(255 255 255 / 8%);
+		color: rgb(255 255 255 / 95%);
+	}
+
+	&:focus-visible {
+		outline: 2px solid rgb(255 255 255 / 50%);
+		outline-offset: -2px;
+	}
+
+	&--active {
+		background: linear-gradient(
+			90deg,
+			rgb(150 170 255 / 22%),
+			rgb(150 170 255 / 6%)
+		);
+		color: rgb(255 255 255 / 100%);
+		font-weight: 600;
+		box-shadow: inset 0 0 18px rgb(130 150 255 / 15%);
+	}
+}
+
+// Mobile: nav becomes a bottom sheet (matching the detail panel) rather than a
+// left side bar; hidden below the fold until the toggle opens it.
+@media (width <= 767px) {
+	.galaxy-sidebar {
+		inset: auto 0 0;
+		width: 100%;
+
+		// dvh so the sheet fits the visible viewport (URL bar in or out);
+		// safe-area pad keeps the last item clear of the home indicator.
+		max-height: 60vh;
+		max-height: 60dvh;
+		padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
+		border-radius: 16px 16px 0 0;
+		transform: translateY(100%);
+		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+		// Drag-handle affordance at the top edge.
+		&::before {
+			content: "";
+			display: block;
+			width: 36px;
+			height: 4px;
+			margin: 0.15rem auto 0.6rem;
+			border-radius: 999px;
+			background: rgb(255 255 255 / 35%);
+		}
+
+		&--open {
+			transform: translateY(0);
+		}
+	}
+
+	.galaxy-sidebar-toggle {
+		display: flex;
+	}
+
+	// Prev/next floats just above the detail bottom sheet (75dvh) instead of at
+	// the screen bottom, where it would sit behind the URL bar or over the sheet.
+	.galaxy-panel-nav {
+		bottom: calc(75dvh + 0.75rem);
+	}
+
+	// Keep the bottom hint clear of the browser chrome / home indicator.
+	.galaxy-hud-bottom-center {
+		bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+	}
+}
+
+@media (width <= 480px) {
+	.galaxy-sidebar__item,
+	.galaxy-sidebar__section-title {
+		font-size: 0.72rem;
+		padding: 0.35rem 0.5rem;
+	}
+}
+
+// Sidebar toggle button (mobile only — hidden on desktop via display:none)
+.galaxy-sidebar-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	background: rgb(255 255 255 / 8%);
+	border: 1px solid rgb(255 255 255 / 20%);
+	color: rgb(255 255 255 / 85%);
+	width: 2rem;
+	height: 2rem;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	font-family: inherit;
+	transition:
+		background 0.2s,
+		border-color 0.2s;
+
+	&:hover {
+		background: rgb(255 255 255 / 15%);
+		border-color: rgb(255 255 255 / 40%);
+	}
+}
+
+// Prev / next card navigation — floats above the open panel
+.galaxy-panel-nav {
+	position: absolute;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	background: linear-gradient(160deg, rgb(16 18 44 / 82%), rgb(6 7 24 / 86%));
+	border: 1px solid rgb(150 170 255 / 20%);
+	border-radius: 24px;
+	padding: 0.45rem 0.9rem;
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	box-shadow:
+		0 12px 36px rgb(0 0 0 / 45%),
+		inset 0 1px 0 rgb(255 255 255 / 10%);
+	z-index: 11;
+	white-space: nowrap;
+
+	&--hidden {
+		display: none;
+	}
+
+	&__btn {
+		background: none;
+		border: none;
+		color: rgb(255 255 255 / 75%);
+		font-size: 1.5rem;
+		cursor: pointer;
+		padding: 0 0.15rem;
+		line-height: 1;
+		font-family: inherit;
+		transition: color 0.15s;
+
+		&:hover {
+			color: rgb(255 255 255 / 100%);
+		}
+	}
+
+	&__counter {
+		font-size: 0.72rem;
+		color: rgb(200 200 220 / 65%);
+		min-width: 3rem;
+		text-align: center;
+		letter-spacing: 0.04em;
+	}
+}
+
+// Back button
+.galaxy-back-btn {
+	background: rgb(20 24 52 / 55%);
+	border: 1px solid rgb(150 170 255 / 28%);
+	color: rgb(230 234 255 / 88%);
+	padding: 0.35rem 0.85rem;
+	border-radius: 18px;
+	font-size: 0.85rem;
+	cursor: pointer;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	transition:
+		border-color 0.2s,
+		background 0.2s,
+		box-shadow 0.2s;
+	font-family: inherit;
+
+	&:hover {
+		background: rgb(40 48 96 / 60%);
+		border-color: rgb(160 180 255 / 60%);
+		box-shadow: 0 0 20px rgb(120 140 255 / 30%);
+	}
+
+	&--hidden {
+		visibility: hidden;
+		pointer-events: none;
+	}
+}
+
+// Breadcrumb — separators are CSS ::before pseudo-elements on each
+// non-first part so they disappear automatically with display:none.
+.galaxy-breadcrumb {
+	font-size: 0.78rem;
+	color: rgb(200 200 220 / 70%);
+	display: flex;
+	align-items: center;
+	gap: 0.15rem;
+
+	&__part {
+		&:not(:first-child)::before {
+			content: "›";
+			opacity: 0.5;
+			margin-right: 0.15rem;
+		}
+
+		&:first-child {
+			display: inline-flex;
+			flex-direction: column;
+			line-height: 1.2;
+			font-weight: 600;
+			color: rgb(238 240 255 / 95%);
+			text-shadow: 0 0 18px rgb(130 150 255 / 45%);
+		}
+
+		&--hidden {
+			display: none;
+		}
+	}
+
+	&__subtitle {
+		font-size: 0.62rem;
+		letter-spacing: 0.03em;
+		color: rgb(200 200 220 / 45%);
+	}
+}
+
+// Top-right link group (icons + classic link)
+.galaxy-top-links {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.galaxy-icon-link {
+	display: flex;
+	align-items: center;
+	opacity: 0.55;
+	transition: opacity 0.2s;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	img {
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+}
+
+// Classic theme link
+.galaxy-classic-link {
+	color: rgb(255 255 255 / 55%);
+	font-size: 0.8rem;
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition:
+		color 0.2s,
+		border-color 0.2s;
+
+	&:hover {
+		color: rgb(255 255 255 / 85%);
+		border-color: rgb(255 255 255 / 40%);
+	}
+}
+
+// Hint text
+.galaxy-hint {
+	color: rgb(200 200 220 / 60%);
+	font-size: 0.85rem;
+	text-align: center;
+	pointer-events: none;
+	transition: opacity 0.6s ease;
+
+	&--hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+}
+
+// CSS3D labels (injected by Three.js CSS3DRenderer)
+.galaxy-cluster-label {
+	font-size: 2.2rem;
+	font-weight: bold;
+	letter-spacing: 0.06em;
+	text-shadow: 0 0 20px currentcolor;
+	white-space: nowrap;
+	pointer-events: auto;
+	cursor: pointer;
+	user-select: none;
+
+	// NB: `transform` is owned by CSS3DRenderer (inline matrix3d), so hover
+	// emphasis uses text-shadow / filter, which it does not touch.
+	transition:
+		opacity 0.3s,
+		text-shadow 0.2s,
+		filter 0.2s;
+
+	// Mirrors the 3D nebula swell on hover so the label and its cluster
+	// light up together.
+	&--hover {
+		text-shadow: 0 0 36px currentcolor;
+		filter: brightness(1.35);
+	}
+}
+
+.galaxy-star-label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: rgb(5 5 20 / 55%);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s;
+
+	&--visible {
+		opacity: 1;
+	}
+
+	&__title {
+		font-size: 0.8rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+
+	&__meta {
+		margin-top: 2px;
+		font-size: 0.62rem;
+		letter-spacing: 0.03em;
+		color: rgb(220 220 235 / 65%);
+		white-space: nowrap;
+	}
+
+	&__desc {
+		display: none;
+		width: 200px;
+		margin-top: 6px;
+		font-size: 0.66rem;
+		line-height: 1.35;
+		color: rgb(230 230 240 / 85%);
+		white-space: normal;
+		text-shadow: 0 1px 4px rgb(0 0 0 / 60%);
+	}
+
+	&--expanded &__desc {
+		display: block;
+	}
+}

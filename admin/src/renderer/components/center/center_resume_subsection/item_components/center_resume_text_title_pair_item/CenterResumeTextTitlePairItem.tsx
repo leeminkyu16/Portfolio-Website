@@ -1,23 +1,9 @@
-import { ObjectResumeTextTitlePairItem } from "portfolio-website-shared";
-import React, { FunctionComponent, RefObject, createRef } from "react";
+import React, { FunctionComponent } from "react";
 import { CenterResumeTextTitlePairItemProps } from "./CenterResumeTextTitlePairItemProps";
 
 const CenterResumeTextTitlePairItem: FunctionComponent<CenterResumeTextTitlePairItemProps> = (
 	props: CenterResumeTextTitlePairItemProps,
 ): JSX.Element => {
-	const itemCopy: ObjectResumeTextTitlePairItem = props.textTitlePairItem;
-
-	const englishInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-	const frenchInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-	props.addUpdateObjectFunction((): void => {
-		if (englishInput.current !== null && englishInput.current.value !== undefined) {
-			itemCopy.english = englishInput.current.value;
-		}
-		if (frenchInput.current !== null && frenchInput.current.value !== undefined) {
-			itemCopy.french = frenchInput.current.value;
-		}
-	});
-
 	return (
 		<>
 			<p className="common-label-header-3__p">Text Title Pair</p>
@@ -29,16 +15,18 @@ const CenterResumeTextTitlePairItem: FunctionComponent<CenterResumeTextTitlePair
 						<input
 							className="common-text__input"
 							type="text"
-							defaultValue={props.textTitlePairTemplateItem.additionalParam?.english}
+							value={props.textTitlePairTemplateItem.additionalParam?.english}
 							disabled
+							aria-label="Text title pair first (English)"
 						/>
 
 						<p className="common-label__p">Français:</p>
 						<input
 							className="common-text__input"
 							type="text"
-							defaultValue={props.textTitlePairTemplateItem.additionalParam?.french}
+							value={props.textTitlePairTemplateItem.additionalParam?.french}
 							disabled
+							aria-label="Text title pair first (French)"
 						/>
 					</div>
 				</>
@@ -49,16 +37,22 @@ const CenterResumeTextTitlePairItem: FunctionComponent<CenterResumeTextTitlePair
 				<input
 					className="common-text__input"
 					type="text"
-					defaultValue={props.textTitlePairItem.english}
-					ref={englishInput}
+					value={props.textTitlePairItem.english}
+					onChange={(event): void =>
+						props.onChange({ ...props.textTitlePairItem, english: event.target.value })
+					}
+					aria-label="Text title pair second (English)"
 				/>
 
 				<p className="common-label__p">Français:</p>
 				<input
 					className="common-text__input"
 					type="text"
-					defaultValue={props.textTitlePairItem.french}
-					ref={frenchInput}
+					value={props.textTitlePairItem.french}
+					onChange={(event): void =>
+						props.onChange({ ...props.textTitlePairItem, french: event.target.value })
+					}
+					aria-label="Text title pair second (French)"
 				/>
 			</div>
 		</>

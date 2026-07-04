@@ -8,3 +8,10 @@ export const wrapPageElement: GatsbySSR["wrapPageElement"] = ({
 }): JSX.Element => {
 	return <Provider store={store}>{element}</Provider>;
 };
+
+// Stamp <html lang="en"> into the static markup (defaults to no lang otherwise).
+export const onRenderBody: GatsbySSR["onRenderBody"] = ({
+	setHtmlAttributes,
+}): void => {
+	setHtmlAttributes({ lang: "en" });
+};

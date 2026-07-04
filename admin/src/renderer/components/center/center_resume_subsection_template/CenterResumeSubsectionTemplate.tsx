@@ -1,91 +1,75 @@
-import React, { FunctionComponent, RefObject, createRef, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { FunctionComponent } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	ObjectResumeSubsectionTemplateItem,
 	ObjectResumeSubsectionTemplateItemType,
 	ObjectResumeSubsectionTemplate,
 } from "portfolio-website-shared";
 import { CenterResumeSubsectionTemplateProps } from "./CenterResumeSubsectionTemplateProps";
-import { mapDispatchToProps, mapStateToProps } from "./component_redux_functions";
 import { generateUniqueId } from "../shared/functions/generate_unique_id";
 import { ElementTopRightButtons } from "../shared/components/ElementTopRightButtons";
+import { resumeActions } from "../../../store/components/resume/resumeSlice";
+import { centerViewActions } from "../../../store/components/center_view/centerViewSlice";
+import { RootState } from "../../../store/RootState";
 import "./CenterResumeSubsectionTemplate.scss";
 
-const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTemplateProps> = (
-	props: CenterResumeSubsectionTemplateProps,
-): JSX.Element => {
-	const updateObjectFunctions: (() => void)[] = [];
-
-	const syncState = (): void => {
-		updateObjectFunctions.forEach((updateFunction: () => void): void => {
-			updateFunction();
-		});
-	};
-
-	useEffect((): void => {
-		props.setSyncResumeAction(syncState);
-	}, [props.setSyncResumeAction, updateObjectFunctions, syncState]);
+const CenterResumeSubsectionTemplate: FunctionComponent<
+	CenterResumeSubsectionTemplateProps
+> = (): JSX.Element => {
+	const dispatch = useDispatch();
+	const resumeSectionIndex = useSelector(
+		(state: RootState) => state.centerViewState.sectionIndex,
+	);
+	const resumeSubsectionIndex = useSelector(
+		(state: RootState) => state.centerViewState.subsectionTemplateIndex,
+	);
+	const resumeSubsection = useSelector(
+		(state: RootState) =>
+			state.resume.value[state.centerViewState.sectionIndex].data[
+				state.centerViewState.subsectionTemplateIndex
+			],
+	);
 
 	const setResumeTemplateState = (newResumeTemplate: ObjectResumeSubsectionTemplate): void => {
-		props.setResumeSubsectionTemplateAction(
-			props.resumeSectionIndex,
-			props.resumeSubsectionIndex,
-			newResumeTemplate,
+		dispatch(
+			resumeActions.setResumeSubsectionTemplate({
+				sectionIndex: resumeSectionIndex,
+				subsectionIndex: resumeSubsectionIndex,
+				template: newResumeTemplate,
+			}),
+		);
+	};
+
+	const updateTemplateItem = (
+		templateItemIndex: number,
+		templateItem: ObjectResumeSubsectionTemplateItem,
+	): void => {
+		setResumeTemplateState(
+			resumeSubsection.template.map(
+				(
+					item: ObjectResumeSubsectionTemplateItem,
+					index: number,
+				): ObjectResumeSubsectionTemplateItem =>
+					index === templateItemIndex ? templateItem : item,
+			),
 		);
 	};
 
 	return (
 		<div className="common-page-container__div">
-			<p className="common-label-header-1__p">{`${props.resumeSubsection.title.english} Template`}</p>
+			<p className="common-label-header-1__p">{`${resumeSubsection.title.english} Template`}</p>
 
-			{props.resumeSubsection.template.map(
+			{resumeSubsection.template.map(
 				(
 					templateItem: ObjectResumeSubsectionTemplateItem,
 					templateItemIndex: number,
 				): JSX.Element => {
-					const itemCopy: ObjectResumeSubsectionTemplateItem = templateItem;
-
-					const uniqueIdInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const itemTypeSelectRef: RefObject<HTMLSelectElement> = createRef<HTMLSelectElement>();
-					const additionalParamEnglishInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const additionalParamFrenchInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-
-					updateObjectFunctions.push((): void => {
-						if (
-							uniqueIdInputRef.current !== null &&
-							uniqueIdInputRef.current.value !== undefined
-						) {
-							itemCopy.uniqueId = parseInt(uniqueIdInputRef.current.value, 10);
-						}
-						if (
-							itemTypeSelectRef.current !== null &&
-							itemTypeSelectRef.current.value !== undefined
-						) {
-							itemCopy.itemType = itemTypeSelectRef.current
-								.value as ObjectResumeSubsectionTemplateItemType;
-						}
-						if (
-							additionalParamEnglishInputRef.current !== null &&
-							additionalParamEnglishInputRef.current.value !== undefined &&
-							itemCopy.additionalParam !== undefined
-						) {
-							itemCopy.additionalParam.english =
-								additionalParamEnglishInputRef.current.value;
-						}
-						if (
-							additionalParamFrenchInputRef.current !== null &&
-							additionalParamFrenchInputRef.current.value !== undefined &&
-							itemCopy.additionalParam !== undefined
-						) {
-							itemCopy.additionalParam.french =
-								additionalParamFrenchInputRef.current.value;
-						}
-					});
+					const { additionalParam } = templateItem;
 
 					return (
 						<div className="common-element-container__div" key={templateItem.uniqueId}>
 							<ElementTopRightButtons
-								listState={props.resumeSubsection.template}
+								listState={resumeSubsection.template}
 								setListState={setResumeTemplateState}
 								elementIndex={templateItemIndex}
 							/>
@@ -94,15 +78,28 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 							<input
 								className="common-text__input"
 								type="number"
-								defaultValue={templateItem.uniqueId}
-								ref={uniqueIdInputRef}
+								aria-label="Unique Id"
+								value={templateItem.uniqueId}
+								onChange={(event): void =>
+									updateTemplateItem(templateItemIndex, {
+										...templateItem,
+										uniqueId: parseInt(event.target.value, 10) || 0,
+									})
+								}
 							/>
 
 							<p className="common-label__p">Item Type:</p>
 							<select
 								className="common-dropdown__select"
-								defaultValue={templateItem.itemType}
-								ref={itemTypeSelectRef}
+								aria-label="Item Type"
+								value={templateItem.itemType}
+								onChange={(event): void =>
+									updateTemplateItem(templateItemIndex, {
+										...templateItem,
+										itemType: event.target
+											.value as ObjectResumeSubsectionTemplateItemType,
+									})
+								}
 							>
 								<option value="Heading1">Heading 1</option>
 								<option value="Heading1WithLink">Heading 1 with Link</option>
@@ -115,7 +112,7 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 								<option value="HTMLList">HTML List</option>
 							</select>
 
-							{templateItem.additionalParam && (
+							{additionalParam && (
 								<>
 									<p className="common-label__p">Additional Param:</p>
 									<div className="common-item-container__div">
@@ -123,16 +120,34 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 										<input
 											className="common-text__input"
 											type="text"
-											defaultValue={templateItem.additionalParam?.english}
-											ref={additionalParamEnglishInputRef}
+											aria-label="Additional Param (English)"
+											value={additionalParam.english}
+											onChange={(event): void =>
+												updateTemplateItem(templateItemIndex, {
+													...templateItem,
+													additionalParam: {
+														...additionalParam,
+														english: event.target.value,
+													},
+												})
+											}
 										/>
 
 										<p className="common-label__p">Français:</p>
 										<input
 											className="common-text__input"
 											type="text"
-											defaultValue={templateItem.additionalParam?.french}
-											ref={additionalParamFrenchInputRef}
+											aria-label="Additional Param (French)"
+											value={additionalParam.french}
+											onChange={(event): void =>
+												updateTemplateItem(templateItemIndex, {
+													...templateItem,
+													additionalParam: {
+														...additionalParam,
+														french: event.target.value,
+													},
+												})
+											}
 										/>
 									</div>
 								</>
@@ -142,25 +157,32 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 				},
 			)}
 
+			{resumeSubsection.template.length === 0 && (
+				<p className="common-empty__p">No template items yet. Add one below.</p>
+			)}
+
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					props.setResumeSubsectionTemplateAction(
-						props.resumeSectionIndex,
-						props.resumeSubsectionIndex,
-						[
-							...props.resumeSubsection.template,
-							{
-								uniqueId: generateUniqueId(
-									props.resumeSubsection.template.map(
-										(element: ObjectResumeSubsectionTemplateItem): number =>
-											element.uniqueId,
+					dispatch(
+						resumeActions.setResumeSubsectionTemplate({
+							sectionIndex: resumeSectionIndex,
+							subsectionIndex: resumeSubsectionIndex,
+							template: [
+								...resumeSubsection.template,
+								{
+									uniqueId: generateUniqueId(
+										resumeSubsection.template.map(
+											(element: ObjectResumeSubsectionTemplateItem): number =>
+												element.uniqueId,
+										),
 									),
-								),
-								itemType: "Text",
-								additionalParam: undefined,
-							},
-						],
+									itemType: "Text",
+									additionalParam: null,
+								},
+							],
+						}),
 					);
 				}}
 			>
@@ -169,10 +191,9 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					syncState();
-
-					props.setCenterViewSubsectionTemplateIndexAction(-1);
+					dispatch(centerViewActions.setSubsectionTemplateIndex(-1));
 				}}
 			>
 				Go Back
@@ -181,4 +202,4 @@ const CenterResumeSubsectionTemplate: FunctionComponent<CenterResumeSubsectionTe
 	);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CenterResumeSubsectionTemplate);
+export default CenterResumeSubsectionTemplate;

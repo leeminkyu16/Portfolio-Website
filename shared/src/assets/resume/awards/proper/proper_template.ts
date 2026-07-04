@@ -2,7 +2,7 @@ import { ListResumeSubsectionTemplate } from "../../../../types/list_resume/List
 
 const properTemplate: ListResumeSubsectionTemplate = [
     [0, "Heading1"],
-    [1, "TextTitlePair", ["Organization:", "French"]],
+    [1, "TextTitlePair", ["Organization:", "Organisation :", "기관:", "団体:"]],
     [2, "HTMLText"],
 ];
 

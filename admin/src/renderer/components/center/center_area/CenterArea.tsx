@@ -1,20 +1,35 @@
 import React, { FunctionComponent } from "react";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import CenterResume from "../center_resume/CenterResume";
 import CenterResumeSection from "../center_resume_section/CenterResumeSection";
 import { CenterAreaProps } from "./CenterAreaProps";
-import { mapDispatchToProps, mapStateToProps } from "./component_redux_functions";
 import CenterResumeSubsection from "../center_resume_subsection/CenterResumeSubsection";
 import CenterResumeSubsectionTemplate from "../center_resume_subsection_template/CenterResumeSubsectionTemplate";
+import { RootState } from "../../../store/RootState";
 import "./CenterArea.scss";
 
-const CenterArea: FunctionComponent<CenterAreaProps> = (props: CenterAreaProps): JSX.Element => {
-	if (props.centerViewState.sectionIndex >= 0) {
-		if (props.centerViewState.subsectionIndex >= 0) {
-			return <CenterResumeSubsection />;
+const CenterArea: FunctionComponent<CenterAreaProps> = (): JSX.Element => {
+	const centerViewState = useSelector((state: RootState) => state.centerViewState);
+	const resume = useSelector((state: RootState) => state.resume.value);
+
+	// Guard against stale indices (e.g. after loading a smaller resume) so a view
+	// pointing past the end of the current data degrades to a valid parent view
+	// instead of indexing into `undefined` and crashing the renderer.
+	const section =
+		centerViewState.sectionIndex >= 0 ? resume[centerViewState.sectionIndex] : undefined;
+
+	if (section !== undefined) {
+		if (centerViewState.subsectionIndex >= 0) {
+			if (section.data[centerViewState.subsectionIndex] !== undefined) {
+				return <CenterResumeSubsection />;
+			}
+			return <CenterResumeSection />;
 		}
-		if (props.centerViewState.subsectionTemplateIndex >= 0) {
-			return <CenterResumeSubsectionTemplate />;
+		if (centerViewState.subsectionTemplateIndex >= 0) {
+			if (section.data[centerViewState.subsectionTemplateIndex] !== undefined) {
+				return <CenterResumeSubsectionTemplate />;
+			}
+			return <CenterResumeSection />;
 		}
 
 		return <CenterResumeSection />;
@@ -22,4 +37,4 @@ const CenterArea: FunctionComponent<CenterAreaProps> = (props: CenterAreaProps):
 	return <CenterResume />;
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CenterArea);
+export default CenterArea;

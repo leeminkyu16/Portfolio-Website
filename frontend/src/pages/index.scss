@@ -1,8 +1,9 @@
 * {
-	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",
-		"Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
-		"Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier,
-		monospace;
+	font-family:
+		Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",
+		"Lucida Sans Typewriter", "DejaVu Sans Mono",
+		"Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco,
+		"Courier New", Courier, monospace;
 }
 
 body {
@@ -14,4 +15,73 @@ body {
 	position: relative;
 	width: 100%;
 	margin: 0;
+}
+
+// Entry point to the 3D galaxy view. Fixed (top-left, clear of the top-right
+// hamburger) rather than on the WelcomeCard, whose hover-flip made an in-card
+// link impossible to click.
+.classic-view-links {
+	position: fixed;
+	top: 1.2rem;
+	left: 1.2rem;
+	z-index: 10;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.classic-galaxy-link {
+	padding: 0.45rem 1.1rem;
+	border: 1px solid rgb(130 150 255 / 45%);
+	border-radius: 20px;
+	background: linear-gradient(
+		135deg,
+		rgb(99 102 241 / 20%),
+		rgb(56 130 240 / 14%)
+	);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	color: rgb(206 212 255 / 95%);
+	font-size: 0.8rem;
+	letter-spacing: 0.06em;
+	text-decoration: none;
+	box-shadow: 0 0 22px rgb(99 102 241 / 22%);
+	transition:
+		background 0.25s,
+		border-color 0.25s,
+		color 0.25s,
+		box-shadow 0.25s,
+		transform 0.25s;
+
+	&:hover {
+		background: linear-gradient(
+			135deg,
+			rgb(120 125 255 / 32%),
+			rgb(70 150 250 / 24%)
+		);
+		border-color: rgb(160 180 255 / 80%);
+		color: rgb(232 234 255 / 100%);
+		box-shadow: 0 0 32px rgb(120 130 255 / 48%);
+		transform: translateY(-1px);
+	}
+}
+
+// Star Sky variant — violet/indigo accent to distinguish it from Galaxy.
+.classic-stars-link {
+	border-color: rgb(160 130 255 / 45%);
+	background: linear-gradient(
+		135deg,
+		rgb(139 92 246 / 20%),
+		rgb(99 102 241 / 14%)
+	);
+	box-shadow: 0 0 22px rgb(139 92 246 / 22%);
+
+	&:hover {
+		background: linear-gradient(
+			135deg,
+			rgb(160 120 255 / 32%),
+			rgb(120 125 255 / 24%)
+		);
+		border-color: rgb(185 160 255 / 80%);
+		box-shadow: 0 0 32px rgb(150 120 255 / 48%);
+	}
 }

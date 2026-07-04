@@ -3,7 +3,7 @@ import workExperience from "./work_experience";
 
 const experience: ListResumeSection = [
     0,
-    ["Experience", "French"],
+    ["Experience", "Expérience", "경력", "職務経歴"],
     [workExperience],
 ];
 

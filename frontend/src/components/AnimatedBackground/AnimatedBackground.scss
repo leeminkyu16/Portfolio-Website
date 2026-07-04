@@ -1,37 +1,294 @@
 @use "../../styles/constants/colors.scss" as color;
 
-.background-div {
+// ---------------------------------------------------------------------------
+// Cinematic cosmic backdrop
+//
+// Layered behind the Three.js CSS3D card cloud to give the classic view the
+// same "deep space" identity as /galaxy: nebula glows, parallax starfields
+// that twinkle + drift, and an edge vignette to focus the eye on center.
+// ---------------------------------------------------------------------------
+
+.cosmic-backdrop {
+	position: fixed;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 0;
+	background:
+		radial-gradient(
+			ellipse 120% 80% at 50% -10%,
+			rgb(46 32 92 / 55%) 0%,
+			transparent 55%
+		),
+		radial-gradient(
+			ellipse 90% 70% at 85% 112%,
+			rgb(18 54 92 / 42%) 0%,
+			transparent 60%
+		),
+		radial-gradient(
+			ellipse 80% 60% at 8% 100%,
+			rgb(74 26 74 / 38%) 0%,
+			transparent 60%
+		),
+		radial-gradient(
+			ellipse at center,
+			#0a0a1e 0%,
+			#050510 68%,
+			#020208 100%
+		);
+}
+
+// Soft, slowly drifting nebula clouds (indigo / cyan / warm ember to echo the
+// 旻奎 sky-and-constellation palette).
+.cosmic-nebula {
+	position: absolute;
+	inset: -20%;
+	background:
+		radial-gradient(
+			circle at 25% 30%,
+			rgb(99 102 241 / 22%) 0%,
+			transparent 25%
+		),
+		radial-gradient(
+			circle at 75% 65%,
+			rgb(56 189 248 / 15%) 0%,
+			transparent 30%
+		),
+		radial-gradient(
+			circle at 60% 18%,
+			rgb(217 122 96 / 12%) 0%,
+			transparent 22%
+		);
+	filter: blur(32px);
+	animation: cosmic-drift 60s ease-in-out infinite alternate;
+	will-change: transform;
+}
+
+@keyframes cosmic-drift {
+	0% {
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	100% {
+		transform: translate3d(2%, -3%, 0) scale(1.08);
+	}
+}
+
+// Three parallax starfields: tiled radial dots that twinkle (opacity) and pan
+// (background-position) at different rates so the sky reads with depth.
+.cosmic-stars {
+	position: absolute;
+	inset: 0;
+	will-change: transform, opacity, background-position;
+
+	&--far {
+		background-image:
+			radial-gradient(
+				1px 1px at 20px 30px,
+				rgb(255 255 255 / 70%),
+				transparent
+			),
+			radial-gradient(
+				1px 1px at 130px 80px,
+				rgb(200 210 255 / 60%),
+				transparent
+			),
+			radial-gradient(
+				1px 1px at 90px 160px,
+				rgb(255 255 255 / 55%),
+				transparent
+			),
+			radial-gradient(
+				1px 1px at 200px 120px,
+				rgb(255 240 220 / 60%),
+				transparent
+			);
+		background-size: 220px 220px;
+		animation:
+			cosmic-twinkle 6s ease-in-out infinite,
+			cosmic-pan-far 220s linear infinite;
+	}
+
+	&--mid {
+		background-image:
+			radial-gradient(
+				1.5px 1.5px at 60px 50px,
+				rgb(255 255 255 / 85%),
+				transparent
+			),
+			radial-gradient(
+				1.5px 1.5px at 180px 140px,
+				rgb(190 220 255 / 75%),
+				transparent
+			),
+			radial-gradient(
+				1.5px 1.5px at 110px 200px,
+				rgb(255 235 210 / 70%),
+				transparent
+			);
+		background-size: 300px 300px;
+		animation:
+			cosmic-twinkle 4.5s ease-in-out infinite 1s,
+			cosmic-pan-mid 150s linear infinite;
+	}
+
+	&--near {
+		background-image:
+			radial-gradient(2px 2px at 100px 90px, #fff, transparent),
+			radial-gradient(
+				2.5px 2.5px at 240px 220px,
+				rgb(210 225 255 / 95%),
+				transparent
+			);
+		background-size: 420px 420px;
+		animation:
+			cosmic-twinkle 3.2s ease-in-out infinite 0.5s,
+			cosmic-pan-near 90s linear infinite;
+	}
+}
+
+@keyframes cosmic-twinkle {
+	0%,
+	100% {
+		opacity: 0.35;
+	}
+
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes cosmic-pan-far {
+	from {
+		background-position: 0 0;
+	}
+
+	to {
+		background-position: 220px 440px;
+	}
+}
+
+@keyframes cosmic-pan-mid {
+	from {
+		background-position: 0 0;
+	}
+
+	to {
+		background-position: -300px 300px;
+	}
+}
+
+@keyframes cosmic-pan-near {
+	from {
+		background-position: 0 0;
+	}
+
+	to {
+		background-position: 420px -420px;
+	}
+}
+
+// Cinematic edge vignette. Sits above the star layers but below the 3D card
+// cloud (which mounts into .background-div, a later sibling).
+.cosmic-vignette {
+	position: absolute;
+	inset: 0;
 	background: radial-gradient(
-		ellipse at center,
-		color.$background-center-color 0%,
-		color.$primary-background-color 100%
+		ellipse 78% 78% at 50% 44%,
+		transparent 52%,
+		rgb(0 0 0 / 55%) 100%
 	);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cosmic-nebula,
+	.cosmic-stars {
+		animation: none;
+	}
+}
+
+// Three.js CSS3D card cloud mounts its renderer here.
+.background-div {
 	position: fixed;
 	top: 0;
 	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
 }
 
 .background-card {
+	position: relative;
 	width: 250px;
 	height: 160px;
-	box-shadow: 0 0 12px color.$background-card-shadow-color;
-	border: 1px solid color.$background-card-border-color;
-	font-family: Helvetica, sans-serif;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+
+	// GPU-promote each card so the renderer's per-frame matrix3d writes
+	// composite cheaply. preserve-3d lets the two faces sit in the card's own
+	// 3D space so the back face flips behind the front.
+	transform: translateZ(0);
+	transform-style: preserve-3d;
+	will-change: transform;
 	cursor: default;
 
-	&:hover {
-		box-shadow: 0 0 12px color.$background-card-hover-shadow-color;
-		border: 1px solid color.$background-card-hover-border-color;
+	.card-face {
+		position: absolute;
+		inset: 0;
+		border-radius: 12px;
+		border: 1px solid rgb(127 200 255 / 25%);
+		box-shadow:
+			0 0 20px rgb(80 120 255 / 22%),
+			inset 0 0 32px rgb(30 40 90 / 35%);
+
+		// No backdrop-filter: a live blur re-sampled per frame across 100+
+		// moving CSS3D cards is the dominant cost. The translucent bg + border
+		// + glow carry the glass look without it.
+		backface-visibility: hidden;
+		font-family: Helvetica, sans-serif;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		transition:
+			box-shadow 0.4s ease,
+			border-color 0.4s ease;
+
+		// Gentle idle "breathing": a few px of vertical drift + a faint opacity
+		// shimmer, staggered per card via the --bob-* vars set in JS. This is a
+		// transform animation on the *inner* face — which the CSS3DRenderer never
+		// writes to — so it runs entirely on the compositor: no JS, no re-render,
+		// alive even while the render loop is idle. Off under reduce-motion.
+		@media (prefers-reduced-motion: no-preference) {
+			animation: cardFloatFront var(--bob-dur, 8s) ease-in-out infinite;
+			animation-delay: var(--bob-delay, 0s);
+		}
+
+		// The back face is rotated a half-turn within the card so it presents
+		// upright, non-mirrored content to the camera from the reverse side.
+		&.back {
+			transform: rotateY(180deg);
+
+			// Same drift, but its keyframes bake in the half-turn so the back
+			// stays flipped while it bobs.
+			@media (prefers-reduced-motion: no-preference) {
+				animation-name: cardFloatBack;
+			}
+		}
+	}
+
+	// Hover reaction: brighten the border + glow. Cheap — box-shadow repaint on
+	// a single hovered card, not the whole cloud.
+	&:hover .card-face {
+		border-color: rgb(127 220 255 / 80%);
+		box-shadow:
+			0 0 30px rgb(0 220 255 / 45%),
+			inset 0 0 32px rgb(40 60 120 / 45%);
 	}
 
 	.lang {
 		margin: auto;
 		width: 80%;
 		font-size: 20px;
+		letter-spacing: 0.02em;
 		color: color.$background-card-text-color;
 	}
 
@@ -46,8 +303,34 @@
 			color.$background-card-code-border-highlight-color;
 		border-bottom: 1px solid
 			color.$background-card-code-border-highlight-color;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
 		border-radius: 5px;
+	}
+}
+
+// Idle drift for the card faces. Front and back share the motion; the back
+// variant preserves its rotateY(180deg) so it stays facing outward as it bobs.
+//
+// Transform only — no opacity here. An element with `backface-visibility:
+// hidden` AND opacity < 1 is flattened into a 2D layer, which has no backface,
+// so the front face would show (mirrored) from behind on top of the back.
+@keyframes cardFloatFront {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+
+	50% {
+		transform: translate3d(0, -5px, 0);
+	}
+}
+
+@keyframes cardFloatBack {
+	0%,
+	100% {
+		transform: rotateY(180deg) translate3d(0, 0, 0);
+	}
+
+	50% {
+		transform: rotateY(180deg) translate3d(0, -5px, 0);
 	}
 }

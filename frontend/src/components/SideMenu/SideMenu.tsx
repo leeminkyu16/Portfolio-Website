@@ -21,7 +21,10 @@ const SideMenu: React.FunctionComponent = (): JSX.Element => {
 	};
 
 	const scrollToBottom = (): void => {
-		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+		window.scrollTo({
+			top: document.body.scrollHeight,
+			behavior: "smooth",
+		});
 	};
 
 	const scrollToResumeSection =
@@ -151,6 +154,19 @@ const SideMenu: React.FunctionComponent = (): JSX.Element => {
 						showSettingsModal,
 						"Settings",
 					)}
+					<li className="side-menu-item-top-double-border">
+						<a
+							href="/galaxy"
+							className="side-menu-item-button"
+							style={{
+								display: "block",
+								padding: "3% 5%",
+								textDecoration: "none",
+							}}
+						>
+							Galaxy Theme →
+						</a>
+					</li>
 				</ul>
 			</div>
 		</>

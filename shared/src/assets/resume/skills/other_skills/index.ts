@@ -4,7 +4,7 @@ import otherSkillsTemplate from "./other_skills_template";
 
 const otherSkills: ListResumeSubsection = [
     2,
-    ["Other Skills", "French"],
+    ["Other Skills", "Autres compétences", "기타 기술", "その他のスキル"],
     "small",
     otherSkillsTemplate,
     otherSkillsData,

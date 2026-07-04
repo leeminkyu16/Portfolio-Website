@@ -4,7 +4,7 @@ import languagesTemplate from "./languages_template";
 
 const languages: ListResumeSubsection = [
     1,
-    ["Languages", "French"],
+    ["Languages", "Langues", "언어", "言語"],
     "small",
     languagesTemplate,
     languagesData,

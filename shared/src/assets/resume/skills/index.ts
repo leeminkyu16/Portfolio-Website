@@ -5,7 +5,7 @@ import programmingLanguages from "./programming_languages";
 
 const skills: ListResumeSection = [
     1,
-    ["Skills", "French"],
+    ["Skills", "Compétences", "기술", "スキル"],
     [programmingLanguages, languages, otherSkills],
 ];
 

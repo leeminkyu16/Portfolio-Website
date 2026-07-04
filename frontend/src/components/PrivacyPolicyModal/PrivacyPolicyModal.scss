@@ -3,23 +3,32 @@
 @use "../../styles/constants/colors.scss" as color;
 
 .privacy-policy-modal__div {
-	background-color: color.$primary-translucent-background-color;
-	color: color.$primary-text-on-primary-background-color;
+	background: linear-gradient(
+		150deg,
+		rgb(20 22 48 / 88%) 0%,
+		rgb(9 10 28 / 90%) 100%
+	);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+	color: rgb(224 228 250 / 92%);
 	position: fixed;
 	bottom: 2vh;
 	left: 50%;
 	transform: translate(-50%, 0%);
-	border: solid 1px color.$primary-border-color;
-	border-radius: 10px;
-	overflow-y: auto;
-	overflow-x: hidden;
+	border: 1px solid rgb(150 170 255 / 22%);
+	border-radius: 16px;
+	box-shadow:
+		0 18px 50px rgb(0 0 0 / 55%),
+		0 0 40px rgb(99 102 241 / 16%),
+		inset 0 1px 0 rgb(255 255 255 / 10%);
+	overflow: hidden auto;
 	-webkit-overflow-scrolling: touch;
 	transition: 0.45s;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 0.5%;
+	padding: 1rem 1.25rem;
 
 	&#{&}-hidden {
 		transform: translate(-50%, 120%);
@@ -42,15 +51,44 @@
 	.title-text {
 		align-self: flex-start;
 		font-size: x-large;
-		margin: 0;
+		margin: 0 0 0.35rem;
+		letter-spacing: 0.02em;
+		text-shadow: 0 0 18px rgb(130 150 255 / 40%);
 	}
 
 	.main-text {
 		font-size: medium;
-		margin: 5px 10px 10px;
+		margin: 0 0 0.85rem;
+		line-height: 1.5;
+		color: rgb(206 212 240 / 82%);
 	}
 
 	.main-button {
 		@include button.rounded-primary-button;
+
+		border: 1px solid rgb(150 170 255 / 45%);
+		background: linear-gradient(
+			135deg,
+			rgb(99 102 241 / 28%),
+			rgb(56 130 240 / 20%)
+		);
+		color: rgb(224 228 255 / 96%);
+		box-shadow: 0 0 22px rgb(99 102 241 / 22%);
+		transition:
+			background 0.25s,
+			border-color 0.25s,
+			box-shadow 0.25s,
+			transform 0.25s;
+
+		&:hover {
+			background: linear-gradient(
+				135deg,
+				rgb(120 125 255 / 40%),
+				rgb(70 150 250 / 30%)
+			);
+			border-color: rgb(170 190 255 / 80%);
+			box-shadow: 0 0 30px rgb(120 130 255 / 45%);
+			transform: translateY(-1px);
+		}
 	}
 }

@@ -19,7 +19,9 @@ module.exports = merge(baseConfig, {
 			verbose: true,
 			disableDotRule: false,
 		},
-		onBeforeSetupMiddleware() {
+		// webpack-dev-server 5 removed onBeforeSetupMiddleware in favour of
+		// setupMiddlewares; spawn the Electron main process on server startup.
+		setupMiddlewares(middlewares) {
 			if (process.env.START_HOT) {
 				console.log("Starting main process");
 				spawn("npm", ["run", "start-main-dev"], {
@@ -30,6 +32,7 @@ module.exports = merge(baseConfig, {
 					.on("close", (code) => process.exit(code))
 					.on("error", (spawnError) => console.error(spawnError));
 			}
+			return middlewares;
 		},
 	},
 });

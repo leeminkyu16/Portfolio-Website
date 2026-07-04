@@ -4,6 +4,7 @@ import { RootState } from "../../state";
 import { settingsSliceActions } from "../../state/SettingsSlice/SettingsSlice";
 import { SettingsSliceState } from "../../state/SettingsSlice/SettingsSliceTypes";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { LanguageToggle } from "../LanguageToggle/LanguageToggle";
 import "./SettingModal.scss";
 
 const SettingModal: React.FunctionComponent = (): JSX.Element => {
@@ -24,6 +25,14 @@ const SettingModal: React.FunctionComponent = (): JSX.Element => {
 		sphere: "Sphere",
 		helix: "Helix",
 		grid: "Grid",
+		constellation: "奎 Constellation",
+	};
+
+	const backgroundShapeGlyphs = {
+		sphere: "◍",
+		helix: "𖣘",
+		grid: "▦",
+		constellation: "✦",
 	};
 
 	const onCloseClick = (): void => {
@@ -44,21 +53,21 @@ const SettingModal: React.FunctionComponent = (): JSX.Element => {
 		dispatch(settingsSliceActions.setSectionsFade(event.target.checked));
 	};
 
-	const renderCheckbox = (
+	const renderToggleRow = (
 		label: string,
 		onChange: ChangeEventHandler<HTMLInputElement> | undefined,
 		defaultChecked: boolean,
 	): JSX.Element => {
 		return (
-			<>
-				<p className="setting-panel__label">{label}</p>
+			<label className="setting-row">
+				<span className="setting-row__label">{label}</span>
 				<input
 					type="checkbox"
 					className="setting-panel__checkbox"
 					onChange={onChange}
 					defaultChecked={defaultChecked}
-				></input>
-			</>
+				/>
+			</label>
 		);
 	};
 
@@ -68,59 +77,104 @@ const SettingModal: React.FunctionComponent = (): JSX.Element => {
 				<div
 					className="setting-panel__background"
 					role="button"
+					onClick={onCloseClick}
 				>
-					<div className="setting-panel">
-						<h1 className="setting-panel__title">Settings</h1>
-						{renderCheckbox(
-							"Sections Fade In",
-							onSectionsFadeChange,
-							settingsState.sectionsFade,
-						)}
-						{renderCheckbox(
-							"Background Auto Rotate",
-							onBackgroundAutoRotateChange,
-							settingsState.backgroundAutoRotate,
-						)}
+					<div
+						className="setting-panel"
+						role="dialog"
+						aria-label="Settings"
+						onClick={(event): void => event.stopPropagation()}
+					>
+						<div className="setting-panel__header">
+							<h1 className="setting-panel__title">Settings</h1>
+							<button
+								type="button"
+								className="setting-panel__close-x"
+								aria-label="Close settings"
+								onClick={onCloseClick}
+							>
+								×
+							</button>
+						</div>
+
+						<section className="setting-panel__group">
+							{renderToggleRow(
+								"Sections Fade In",
+								onSectionsFadeChange,
+								settingsState.sectionsFade,
+							)}
+							{renderToggleRow(
+								"Background Auto Rotate",
+								onBackgroundAutoRotateChange,
+								settingsState.backgroundAutoRotate,
+							)}
+						</section>
+
+						<h2 className="setting-panel__subtitle">Language</h2>
+						<LanguageToggle className="setting-panel__language" />
+
 						<h2 className="setting-panel__subtitle">
 							Background Card Layout
 						</h2>
-						{[
-							BackgroundShape.SPHERE,
-							BackgroundShape.HELIX,
-							BackgroundShape.GRID,
-						].map(
-							(backgroundShape: BackgroundShape): JSX.Element => {
-								return (
-									<React.Fragment key={backgroundShape}>
-										<p className="setting-panel__label">
-											{
-												backgroundShapeLabels[
-													backgroundShape
-												]
-											}
-										</p>
-										<input
-											type="radio"
-											className="setting-panel__checkbox"
-											name="background-shape"
-											onChange={onBackgroundShapeChange(
+						<div
+							className="setting-panel__options"
+							role="radiogroup"
+							aria-label="Background Card Layout"
+						>
+							{[
+								BackgroundShape.SPHERE,
+								BackgroundShape.HELIX,
+								BackgroundShape.GRID,
+								BackgroundShape.CONSTELLATION,
+							].map(
+								(
+									backgroundShape: BackgroundShape,
+								): JSX.Element => {
+									const isActive =
+										settingsState.backgroundShape ===
+										backgroundShape;
+									return (
+										<button
+											key={backgroundShape}
+											type="button"
+											role="radio"
+											aria-checked={isActive}
+											className={`setting-option${
+												isActive
+													? " setting-option--active"
+													: ""
+											}`}
+											onClick={onBackgroundShapeChange(
 												backgroundShape,
 											)}
-											defaultChecked={
-												settingsState.backgroundShape ===
-												backgroundShape
-											}
-										></input>
-									</React.Fragment>
-								);
-							},
-						)}
-						<input
-							onClick={onCloseClick}
+										>
+											<span className="setting-option__glyph">
+												{
+													backgroundShapeGlyphs[
+														backgroundShape
+													]
+												}
+											</span>
+											<span className="setting-option__label">
+												{
+													backgroundShapeLabels[
+														backgroundShape
+													]
+												}
+											</span>
+										</button>
+									);
+								},
+							)}
+						</div>
+
+						<button
 							type="button"
-							value="Close"
+							onClick={onCloseClick}
 							className="setting-panel__button"
-						/>
+						>
+							Close
+						</button>
 					</div>
 				</div>
 			)}

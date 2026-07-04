@@ -1,7 +1,7 @@
 @use "../../styles/constants/colors.scss" as color;
 
 $welcome-card-width: min(30rem, 100%);
-$welcome-card-height: min(15rem, 100%);
+$welcome-card-height: min(18rem, 100%);
 
 .welcome-content {
 	color: color.$primary-text-on-primary-background-color;
@@ -11,6 +11,23 @@ $welcome-card-height: min(15rem, 100%);
 	justify-content: center;
 	align-items: center;
 	z-index: 10;
+
+	// Cinematic entrance — the card rises and settles into focus on load.
+	animation: welcome-rise 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes welcome-rise {
+	0% {
+		opacity: 0;
+		transform: translateY(2.5rem) scale(0.96);
+		filter: blur(6px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+		filter: blur(0);
+	}
 }
 
 .welcome-card {
@@ -18,6 +35,31 @@ $welcome-card-height: min(15rem, 100%);
 	height: min($welcome-card-height + 5rem, 100%);
 	width: $welcome-card-width;
 	position: static;
+	cursor: pointer;
+	outline: none;
+
+	// Keyboard focus ring — the card is an interactive flip control.
+	&:focus-visible {
+		outline: 2px solid rgb(150 170 255 / 70%);
+		outline-offset: 6px;
+		border-radius: 16px;
+	}
+
+	@mixin glass-side {
+		background: linear-gradient(
+			150deg,
+			rgb(28 30 58 / 82%) 0%,
+			rgb(12 14 34 / 82%) 55%,
+			rgb(18 12 34 / 82%) 100%
+		);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border: 1px solid rgb(150 170 255 / 22%);
+		box-shadow:
+			0 12px 48px rgb(0 0 0 / 55%),
+			0 0 42px rgb(99 102 241 / 22%),
+			inset 0 1px 0 rgb(255 255 255 / 12%);
+	}
 
 	&__side {
 		height: $welcome-card-height;
@@ -28,32 +70,48 @@ $welcome-card-height: min(15rem, 100%);
 		margin: auto;
 		width: $welcome-card-width;
 		backface-visibility: hidden;
-		border-radius: 10px;
+		border-radius: 16px;
 		overflow: hidden;
-		box-shadow: 0 0 1rem color.$primary-shadow-on-primary-background-color;
 
 		&--front {
-			background-color: color.$welcome-card-background-color;
+			@include glass-side;
+
+			animation: welcome-glow 6s ease-in-out infinite;
 		}
 
 		&--back {
+			@include glass-side;
+
 			transform: rotateY(180deg);
-			background-color: color.$welcome-card-background-color;
 		}
 	}
 
-	&:hover &__side--front {
+	// Hover flip — desktop flourish only. Gated on hover-capable, fine
+	// pointers so touch devices don't get a sticky first-tap "hover".
+	@media (hover: hover) and (pointer: fine) {
+		&:hover &__side--front {
+			transform: rotateY(-180deg);
+		}
+
+		&:hover &__side--back {
+			transform: rotateY(0deg);
+		}
+	}
+
+	// Tap / keyboard flip — works on every device, including touch where the
+	// hover flip above never fires.
+	&--flipped &__side--front {
 		transform: rotateY(-180deg);
 	}
 
-	&:hover &__side--back {
+	&--flipped &__side--back {
 		transform: rotateY(0deg);
 	}
 
 	&__container {
 		@mixin container-common {
 			height: $welcome-card-height;
-			background-color: color.$welcome-card-background-color;
+			background-color: transparent;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -80,9 +138,123 @@ $welcome-card-height: min(15rem, 100%);
 	}
 
 	&__button {
-		background-color: color.$welcome-card-background-color;
-		margin: max(5vh, 50px);
+		background-color: rgb(255 255 255 / 6%);
+		border-radius: 50%;
+		margin: max(4vh, 42px);
 		width: max(5vh, 50px);
 		height: max(5vh, 50px);
+		transition:
+			background 0.25s ease,
+			box-shadow 0.25s ease;
+
+		&:hover {
+			background-color: rgb(150 170 255 / 16%);
+			box-shadow: 0 0 18px rgb(99 102 241 / 45%);
+		}
+	}
+}
+
+// Slow breathing glow on the front face so the card feels alive.
+@keyframes welcome-glow {
+	0%,
+	100% {
+		box-shadow:
+			0 12px 48px rgb(0 0 0 / 55%),
+			0 0 34px rgb(99 102 241 / 18%),
+			inset 0 1px 0 rgb(255 255 255 / 12%);
+	}
+
+	50% {
+		box-shadow:
+			0 12px 48px rgb(0 0 0 / 55%),
+			0 0 54px rgb(120 130 255 / 32%),
+			inset 0 1px 0 rgb(255 255 255 / 12%);
+	}
+}
+
+.welcome-card__greeting {
+	font-size: 1.2rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: rgb(238 240 255 / 96%);
+}
+
+.welcome-card__name-native {
+	margin-top: 0.4rem;
+	font-size: 1.05rem;
+	letter-spacing: 0.04em;
+	color: rgb(210 216 255 / 92%);
+}
+
+.welcome-card__seal {
+	margin-left: 0.2rem;
+	padding: 0.05rem 0.34rem;
+	border: 1px solid rgb(210 150 110 / 60%);
+	border-radius: 4px;
+	color: rgb(232 176 140 / 98%);
+	font-size: 0.85em;
+	box-shadow:
+		0 0 14px rgb(210 130 90 / 30%),
+		inset 0 0 10px rgb(210 130 90 / 15%);
+	text-shadow: 0 0 10px rgb(232 176 140 / 45%);
+}
+
+.welcome-card__tagline {
+	margin-top: 0.7rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	background: linear-gradient(
+		90deg,
+		rgb(150 200 255 / 95%),
+		rgb(200 180 255 / 95%),
+		rgb(255 200 170 / 95%)
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.welcome-card__subtitle {
+	margin-top: 0.35rem;
+	font-size: 0.72rem;
+	letter-spacing: 0.06em;
+	color: rgb(190 200 235 / 70%);
+}
+
+.welcome-galaxy-cta {
+	display: inline-block;
+	margin-top: 1.5rem;
+	padding: 0.42rem 1.15rem;
+	border: 1px solid rgb(130 150 255 / 45%);
+	border-radius: 20px;
+	background: linear-gradient(
+		135deg,
+		rgb(99 102 241 / 18%),
+		rgb(56 130 240 / 12%)
+	);
+	color: rgb(200 205 255 / 95%);
+	font-size: 0.76rem;
+	text-decoration: none;
+	letter-spacing: 0.06em;
+	box-shadow: 0 0 20px rgb(99 102 241 / 20%);
+	transition:
+		background 0.25s,
+		border-color 0.25s,
+		color 0.25s,
+		box-shadow 0.25s,
+		transform 0.25s;
+
+	&:hover {
+		background: linear-gradient(
+			135deg,
+			rgb(120 125 255 / 30%),
+			rgb(70 150 250 / 22%)
+		);
+		border-color: rgb(150 170 255 / 75%);
+		color: rgb(230 232 255 / 100%);
+		box-shadow: 0 0 30px rgb(120 130 255 / 45%);
+		transform: translateY(-1px);
 	}
 }

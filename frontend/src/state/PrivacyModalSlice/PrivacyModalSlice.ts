@@ -14,10 +14,10 @@ const initialState: PrivacyModalSliceState =
 					localStorage.getItem(SHOW_PRIVACY_MODAL_KEY),
 					true,
 				),
-		  } as PrivacyModalSliceState)
+			} as PrivacyModalSliceState)
 		: ({
 				showPrivacyPolicyModal: true,
-		  } as PrivacyModalSliceState);
+			} as PrivacyModalSliceState);
 
 const privacyModalSlice: Slice<PrivacyModalSliceState> = createSlice({
 	name: "privacyModal",

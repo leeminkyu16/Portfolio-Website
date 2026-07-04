@@ -1,5 +1,5 @@
 import { ObjectResumeListItem, ObjectResumeListItemProper } from "portfolio-website-shared";
-import React, { FunctionComponent, RefObject, createRef, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { generateUniqueId } from "../../../shared/functions/generate_unique_id";
 import { CenterResumeListItemProps } from "./CenterResumeListItemProps";
 import { ElementTopRightButtons } from "../../../shared/components/ElementTopRightButtons";
@@ -7,108 +7,103 @@ import { ElementTopRightButtons } from "../../../shared/components/ElementTopRig
 const CenterResumeListItem: FunctionComponent<CenterResumeListItemProps> = (
 	props: CenterResumeListItemProps,
 ): JSX.Element => {
-	const listUpdateObjectFunctions: (() => void)[] = [];
-	const [listItemState, setListItemState] = useState<ObjectResumeListItem>(props.listItem);
+	const { listItem } = props;
 
-	props.addUpdateObjectFunction(() => {
-		listUpdateObjectFunctions.forEach((updateObjectFunction: () => void): void => {
-			updateObjectFunction();
-		});
-
-		props.setObjectFunction(listItemState);
-	});
+	const updateElement = (
+		listItemIndex: number,
+		listItemProper: ObjectResumeListItemProper,
+	): void => {
+		props.onChange(
+			listItem.map(
+				(element: ObjectResumeListItemProper, index: number): ObjectResumeListItemProper =>
+					index === listItemIndex ? listItemProper : element,
+			),
+		);
+	};
 
 	return (
 		<>
 			<p className="common-label-header-3__p">List</p>
-			{listItemState.map(
+			{listItem.map(
 				(
 					listItemProper: ObjectResumeListItemProper,
 					listItemIndex: number,
-				): JSX.Element => {
-					const itemCopy: ObjectResumeListItemProper = listItemProper;
+				): JSX.Element => (
+					<div className="common-item-container__div" key={listItemProper.uniqueId}>
+						<ElementTopRightButtons
+							listState={listItem}
+							setListState={props.onChange}
+							elementIndex={listItemIndex}
+						/>
 
-					const uniqueIdInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const textEnglishTextArea: RefObject<HTMLTextAreaElement> = createRef<HTMLTextAreaElement>();
-					const textFrenchTextArea: RefObject<HTMLTextAreaElement> = createRef<HTMLTextAreaElement>();
+						<p className="common-label__p">UniqueId:</p>
+						<input
+							className="common-text__input"
+							type="text"
+							aria-label="List element Unique Id"
+							value={listItemProper.uniqueId}
+							onChange={(event): void =>
+								updateElement(listItemIndex, {
+									...listItemProper,
+									uniqueId: parseInt(event.target.value, 10) || 0,
+								})
+							}
+						/>
 
-					listUpdateObjectFunctions.push((): void => {
-						if (
-							uniqueIdInput.current !== null &&
-							uniqueIdInput.current.value !== undefined
-						) {
-							itemCopy.uniqueId = parseInt(uniqueIdInput.current.value, 10);
-						}
-						if (
-							textEnglishTextArea.current !== null &&
-							textEnglishTextArea.current.value !== undefined
-						) {
-							itemCopy.text.english = textEnglishTextArea.current.value;
-						}
-						if (
-							textFrenchTextArea.current !== null &&
-							textFrenchTextArea.current.value !== undefined
-						) {
-							itemCopy.text.french = textFrenchTextArea.current.value;
-						}
-					});
-
-					return (
-						<div className="common-item-container__div" key={listItemProper.uniqueId}>
-							<ElementTopRightButtons
-								listState={listItemState}
-								setListState={setListItemState}
-								elementIndex={listItemIndex}
+						<p className="common-label__p">Text:</p>
+						<div className="common-item-container__div">
+							<p className="common-label__p">English:</p>
+							<textarea
+								className="common-text__textarea"
+								aria-label="List text (English)"
+								value={listItemProper.text.english}
+								onChange={(event): void =>
+									updateElement(listItemIndex, {
+										...listItemProper,
+										text: {
+											...listItemProper.text,
+											english: event.target.value,
+										},
+									})
+								}
 							/>
 
-							<p className="common-label__p">UniqueId:</p>
-							<input
-								className="common-text__input"
-								type="text"
-								defaultValue={listItemProper.uniqueId}
-								ref={uniqueIdInput}
+							<p className="common-label__p">Français:</p>
+							<textarea
+								className="common-text__textarea"
+								aria-label="List text (French)"
+								value={listItemProper.text.french}
+								onChange={(event): void =>
+									updateElement(listItemIndex, {
+										...listItemProper,
+										text: {
+											...listItemProper.text,
+											french: event.target.value,
+										},
+									})
+								}
 							/>
-
-							<p className="common-label__p">Text:</p>
-							<div className="common-item-container__div">
-								<p className="common-label__p">English:</p>
-								<textarea
-									className="common-text__textarea"
-									defaultValue={listItemProper.text.english}
-									ref={textEnglishTextArea}
-								/>
-
-								<p className="common-label__p">Français:</p>
-								<textarea
-									className="common-text__textarea"
-									defaultValue={listItemProper.text.french}
-									ref={textFrenchTextArea}
-								/>
-							</div>
 						</div>
-					);
-				},
+					</div>
+				),
 			)}
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					setListItemState(
-						(oldListItem: ObjectResumeListItem): ObjectResumeListItem => {
-							return [
-								...oldListItem,
-								{
-									uniqueId: generateUniqueId(
-										oldListItem.map(
-											(element: ObjectResumeListItemProper): number =>
-												element.uniqueId,
-										),
-									),
-									text: { english: "", french: "" },
-								},
-							];
+					props.onChange([
+						...listItem,
+						{
+							uniqueId: generateUniqueId(
+								listItem.map(
+									(element: ObjectResumeListItemProper): number =>
+										element.uniqueId,
+								),
+							),
+							text: { english: "", french: "" },
 						},
-					);
+					]);
 				}}
 			>
 				Add Element to List

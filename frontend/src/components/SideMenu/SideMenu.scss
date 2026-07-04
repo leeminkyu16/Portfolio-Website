@@ -3,15 +3,21 @@
 
 .side-menu {
 	&-main-div {
-		background-color: color.$primary-translucent-background-color;
-		color: color.$primary-text-on-primary-background-color;
+		background: linear-gradient(
+			200deg,
+			rgb(20 22 50 / 90%) 0%,
+			rgb(8 9 26 / 93%) 100%
+		);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		color: rgb(224 228 250 / 92%);
 		position: fixed;
 		top: 0;
 		right: 0;
 		height: 100vh;
-		border-left: solid 1px color.$primary-border-color;
-		overflow-y: auto;
-		overflow-x: hidden;
+		border-left: 1px solid rgb(150 170 255 / 25%);
+		box-shadow: -18px 0 50px rgb(0 0 0 / 45%);
+		overflow: hidden auto;
 		-webkit-overflow-scrolling: touch;
 		transition: 0.45s;
 
@@ -21,6 +27,8 @@
 
 		h1 {
 			margin-left: 10%;
+			letter-spacing: 0.03em;
+			text-shadow: 0 0 20px rgb(130 150 255 / 40%);
 		}
 
 		width: 100%;
@@ -45,7 +53,7 @@
 	}
 
 	&-item {
-		border-top: solid 1px color.$primary-border-color;
+		border-top: 1px solid rgb(150 170 255 / 14%);
 
 		&-button {
 			text-align: left;
@@ -53,27 +61,38 @@
 			width: 100%;
 			background-color: transparent;
 			border: none;
+			border-left: 3px solid transparent;
 			outline: none;
-			color: color.$primary-text-on-primary-background-color;
+			color: rgb(216 222 245 / 82%);
 			display: block;
 			padding: 3% 5%;
 			font-size: 1rem;
 			line-height: 160%;
 			font-weight: bold;
+			transition:
+				background 0.2s,
+				color 0.2s,
+				border-color 0.2s;
+
+			&:hover {
+				background: rgb(150 170 255 / 10%);
+				border-left-color: rgb(150 170 255 / 70%);
+				color: rgb(240 243 255 / 100%);
+			}
 		}
 
 		&-2 {
-			border-top: solid 1px color.$primary-border-color;
+			border-top: 1px solid rgb(150 170 255 / 12%);
 			padding-left: 5%;
 		}
 
 		&-3 {
-			border-top: solid 1px color.$primary-border-color;
+			border-top: 1px solid rgb(150 170 255 / 12%);
 			padding-left: 10%;
 		}
 
 		&-top-double-border {
-			border-top: 3px double color.$primary-border-color;
+			border-top: 3px double rgb(150 170 255 / 30%);
 		}
 	}
 

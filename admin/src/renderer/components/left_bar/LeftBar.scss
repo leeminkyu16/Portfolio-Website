@@ -2,55 +2,116 @@
 @use "../../styles/constants/colors" as colors;
 
 .left-bar-main {
-    &__div {
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid colors.$divider-color;
-        overflow: auto;
+	&__div {
+		display: flex;
+		flex: 0 0 auto;
+		flex-direction: column;
+		min-width: 200px;
+		max-width: 280px;
+		border-right: 1px solid colors.$divider-color;
+		background-color: colors.$dark-primary-background-color;
+		overflow: auto;
 
-        .resume-text {
-            &__button {
-                color: colors.$dark-primary-text-color;
-                background-color: colors.$dark-primary-background-color;
-                margin: 0;
-                border: none;
-                text-align: start;
+		/** Indentation increases with nesting depth. Top Right Bottom Left */
+		.resume-text__button {
+			padding: 1vh 1vw;
+		}
 
-                /** Top Right Bottom Left */
-                padding: 1vh 1vw;
-            }
-        }
+		.section-text__button {
+			padding: 1vh 1vw 1vh 2vw;
+		}
 
-        .section-text {
-            &__button {
-                color: colors.$dark-primary-text-color;
-                background-color: colors.$dark-primary-background-color;
-                margin: 0;
-                border: none;
-                text-align: start;
+		.subsection-text__button {
+			padding: 1vh 1vw 1vh 3vw;
+		}
 
-                /** Top Right Bottom Left */
-                padding: 1vh 1vw 1vh 2vw;
-            }
-        }
+		// Shared styling for every navigation entry in the sidebar.
+		.resume-text__button,
+		.section-text__button,
+		.subsection-text__button {
+			width: 100%;
+			color: colors.$dark-secondary-text-color;
+			background-color: colors.$dark-primary-background-color;
+			margin: 0;
+			border: none;
+			border-left: 3px solid transparent;
+			text-align: start;
+			transition:
+				background-color 0.12s ease,
+				color 0.12s ease;
 
-        .subsection-text {
-            &__button {
-                color: colors.$dark-primary-text-color;
-                background-color: colors.$dark-primary-background-color;
-                margin: 0;
-                border: none;
-                text-align: start;
+			&:hover {
+				background-color: colors.$dark-secondary-background-color;
+				color: colors.$dark-primary-text-color;
+			}
 
-                /** Top Right Bottom Left */
-                padding: 1vh 1vw 1vh 3vw;
-            }
-        }
-    }
+			&.is-active {
+				color: colors.$dark-primary-text-color;
+				background-color: colors.$dark-tertiary-background-color;
+				border-left-color: colors.$dark-highlighted-border-color;
+			}
 
-    .common {
-        &__button {
-            @include common.general-button;
-        }
-    }
+			&.is-untitled {
+				font-style: italic;
+				opacity: 0.55;
+			}
+		}
+
+		.common__button {
+			@include common.general-button;
+		}
+	}
+}
+
+.left-bar-heading {
+	&__p {
+		margin: 0;
+		padding: 1.5vh 1vw;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: colors.$accent-color;
+		border-bottom: 1px solid colors.$dark-tertiary-background-color;
+	}
+}
+
+.left-bar-actions {
+	&__div {
+		display: flex;
+		flex-direction: column;
+		margin-top: auto;
+		padding: 2vh 1vw 1vh;
+
+		.common__button {
+			width: 100%;
+		}
+
+		.common__button--primary {
+			background-color: colors.$accent-color;
+			color: colors.$accent-text-color;
+			border-color: colors.$accent-color;
+
+			&:hover {
+				background-color: colors.$accent-hover-color;
+				border-color: colors.$accent-hover-color;
+			}
+		}
+	}
+}
+
+.left-bar-status {
+	&__p {
+		margin: 1vh 1vw;
+		font-size: 12px;
+		text-align: center;
+	}
+}
+
+.left-bar-status--success {
+	color: #6ee7a8;
+}
+
+.left-bar-status--error {
+	color: #ff8080;
 }

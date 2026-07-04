@@ -9,7 +9,6 @@ import { ListResumeStartEndDateItem } from "../../../types/list_resume/items/Lis
 import { ListResumeTextItem } from "../../../types/list_resume/items/ListResumeTextItem";
 import { ListResumeTextTitlePairItem } from "../../../types/list_resume/items/ListResumeTextTitlePairItem";
 import { ListResumeItem } from "./../../../types/list_resume/items/ListResumeItem";
-import { ObjectResumeInternationalizedString } from "./../../../types/object_resume/general/ObjectResumeInternationalizedString";
 import { ObjectResumeItem } from "./../../../types/object_resume/items/ObjectResumeItem";
 import { listToObjectResumeHeading1Item } from "./ListToObjectResumeHeading1Item";
 import { listToObjectResumeHeading1WithLinkItem } from "./ListToObjectResumeHeading1WithLinkItem";
@@ -59,9 +58,11 @@ export const listToObjectResumeItem = (
                 input as ListResumeHtmlListItem,
             );
         default:
-            return {
-                english: "",
-                french: "",
-            } as ObjectResumeInternationalizedString;
+            // Fail loud on an unknown item type. Previously this silently
+            // returned an empty i18n string cast to ObjectResumeItem, which
+            // corrupted the parsed resume instead of surfacing the problem.
+            throw new Error(
+                `listToObjectResumeItem: unknown item type "${itemType[1]}"`,
+            );
     }
 };

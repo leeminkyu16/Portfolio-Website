@@ -1,17 +1,15 @@
-/* eslint-disable import/no-import-module-exports */
-import { applyMiddleware, createStore, Store } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-
+import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./reducers";
-import { RootState } from "./RootState";
 
-const configureStore = (initialState?: RootState): Store<RootState | undefined> => {
-	const middlewares: any[] = [];
-	const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
-	return createStore(rootReducer, initialState, enhancer);
-};
+// State is only ever updated immutably (controlled inputs dispatch new objects),
+// so Immer's default auto-freeze and RTK's immutable/serializable checks are left
+// enabled — they now guard against accidental in-place mutation.
+const store = configureStore({
+	reducer: rootReducer,
+});
 
-const store: Store<RootState | undefined> = configureStore();
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 if (typeof module.hot !== "undefined") {
 	module.hot.accept("./reducers", (): void =>

@@ -2,16 +2,16 @@ import { ListResumeSubsectionData } from "../../../../types/list_resume/ListResu
 
 const languagesData: ListResumeSubsectionData = [
     [
-        ["English", ""],
-        ["Native", ""],
+        ["English", "Anglais", "영어", "英語"],
+        ["Native", "Langue maternelle", "모국어", "母語"],
     ],
     [
-        ["Korean", ""],
-        ["Native", ""],
+        ["Korean", "Coréen", "한국어", "韓国語"],
+        ["Native", "Langue maternelle", "모국어", "母語"],
     ],
     [
-        ["French", "Francais"],
-        ["B2", "B2"],
+        ["French", "Français", "프랑스어", "フランス語"],
+        ["B2", "B2", "B2", "B2"],
     ],
 ];
 

@@ -1,27 +1,9 @@
-import { ObjectResumeHeading1WithLinkItem } from "portfolio-website-shared";
-import React, { FunctionComponent, RefObject, createRef } from "react";
+import React, { FunctionComponent } from "react";
 import { CenterResumeHeading1WithLinkItemProps } from "./CenterResumeHeading1WithLinkItemProps";
 
 const CenterResumeHeading1WithLinkItem: FunctionComponent<CenterResumeHeading1WithLinkItemProps> = (
 	props: CenterResumeHeading1WithLinkItemProps,
 ): JSX.Element => {
-	const itemCopy: ObjectResumeHeading1WithLinkItem = props.heading1WithLinkItem;
-
-	const englishInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-	const frenchInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-	const linkInput: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-	props.addUpdateObjectFunction((): void => {
-		if (englishInput.current !== null && englishInput.current.value !== undefined) {
-			itemCopy.text.english = englishInput.current.value;
-		}
-		if (frenchInput.current !== null && frenchInput.current.value !== undefined) {
-			itemCopy.text.french = frenchInput.current.value;
-		}
-		if (linkInput.current !== null && linkInput.current.value !== undefined) {
-			itemCopy.link = linkInput.current.value;
-		}
-	});
-
 	return (
 		<>
 			<p className="common-label-header-3__p">Heading 1 With Link</p>
@@ -31,24 +13,45 @@ const CenterResumeHeading1WithLinkItem: FunctionComponent<CenterResumeHeading1Wi
 				<input
 					className="common-text__input"
 					type="text"
-					defaultValue={props.heading1WithLinkItem.text.english}
-					ref={englishInput}
+					value={props.heading1WithLinkItem.text.english}
+					onChange={(event): void =>
+						props.onChange({
+							...props.heading1WithLinkItem,
+							text: {
+								...props.heading1WithLinkItem.text,
+								english: event.target.value,
+							},
+						})
+					}
+					aria-label="Heading 1 with link text (English)"
 				/>
 
 				<p className="common-label__p">Français:</p>
 				<input
 					className="common-text__input"
 					type="text"
-					defaultValue={props.heading1WithLinkItem.text.french}
-					ref={frenchInput}
+					value={props.heading1WithLinkItem.text.french}
+					onChange={(event): void =>
+						props.onChange({
+							...props.heading1WithLinkItem,
+							text: {
+								...props.heading1WithLinkItem.text,
+								french: event.target.value,
+							},
+						})
+					}
+					aria-label="Heading 1 with link text (French)"
 				/>
 			</div>
 			<p className="common-label__p">Link:</p>
 			<input
 				className="common-text__input"
 				type="text"
-				defaultValue={props.heading1WithLinkItem.link}
-				ref={linkInput}
+				value={props.heading1WithLinkItem.link}
+				onChange={(event): void =>
+					props.onChange({ ...props.heading1WithLinkItem, link: event.target.value })
+				}
+				aria-label="Heading 1 link URL"
 			/>
 		</>
 	);

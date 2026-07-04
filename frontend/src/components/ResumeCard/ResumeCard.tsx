@@ -14,6 +14,9 @@ import {
 } from "portfolio-website-shared";
 import React from "react";
 import sanitizeHtml from "sanitize-html";
+import { LANGUAGE_INDEX } from "../../enums/language";
+import { RootState } from "../../state";
+import { useAppSelector } from "../../state/hooks";
 import "./ResumeCard.scss";
 import { ResumeCardProps } from "./ResumeCardProps";
 
@@ -22,17 +25,27 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 ): JSX.Element => {
 	const { keyId, template, data } = props;
 
+	// Active-language tuple index (0 = english … 3 = japanese), driven by the
+	// language selector. `pick` reads the value for that language, falling back
+	// to English so partially translated data never renders `undefined`.
+	const languageIndex = useAppSelector(
+		(state: RootState): number => LANGUAGE_INDEX[state.settings.language],
+	);
+	// `||` (not `??`) so an empty-string translation ("" — used where no
+	// translation was authored) also falls back to English.
+	const pick = (value: ListResumeInternationalizedString): string =>
+		value[languageIndex] || value[0];
+
 	const generateHeading1 = (
 		key: string,
 		elementData: ListResumeHeading1Item,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<p
 				key={key}
 				className="heading1-p"
 			>
-				{elementData[languageIndex]}
+				{pick(elementData)}
 			</p>
 		);
 	};
@@ -40,7 +53,6 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 	const generateHeading1WithLink = (
 		key: string,
 		elementData: ListResumeHeading1WithLinkItem,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<a
@@ -48,7 +60,7 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 				href={elementData[1]}
 				className="heading1-p"
 			>
-				{elementData[0][languageIndex]}
+				{pick(elementData[0])}
 			</a>
 		);
 	};
@@ -56,14 +68,13 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 	const generateHeading2 = (
 		key: string,
 		elementData: ListResumeHeading2Item,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<p
 				key={key}
 				className="heading2-p"
 			>
-				{elementData[languageIndex]}
+				{pick(elementData)}
 			</p>
 		);
 	};
@@ -71,7 +82,6 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 	const generateStartEndDate = (
 		key: string,
 		elementData: ListResumeStartEndDateItem,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<div
@@ -79,9 +89,9 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 				className="start-end-date-div"
 			>
 				<p className="date-title">Start Date:</p>
-				<p className="date-content">{elementData[0][languageIndex]}</p>
+				<p className="date-content">{pick(elementData[0])}</p>
 				<p className="date-title">End Date:</p>
-				<p className="date-content">{elementData[1][languageIndex]}</p>
+				<p className="date-content">{pick(elementData[1])}</p>
 			</div>
 		);
 	};
@@ -89,14 +99,13 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 	const generateText = (
 		key: string,
 		elementData: ListResumeTextItem,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<p
 				key={key}
 				className="text-p"
 			>
-				{elementData[languageIndex]}
+				{pick(elementData)}
 			</p>
 		);
 	};
@@ -104,14 +113,13 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 	const generateHTMLText = (
 		key: string,
 		elementData: ListResumeHtmlTextItem,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<p
 				key={key}
 				className="text-p"
 				dangerouslySetInnerHTML={{
-					__html: sanitizeHtml(elementData[languageIndex], {
+					__html: sanitizeHtml(pick(elementData), {
 						allowedTags: ["b", "br"],
 					}),
 				}}
@@ -123,15 +131,14 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 		key: string,
 		elementData: ListResumeTextTitlePairItem,
 		title: ListResumeInternationalizedString,
-		languageIndex = 0,
 	): JSX.Element => {
 		return (
 			<div
 				className="text-div"
 				key={key}
 			>
-				<p className="title">{title[languageIndex]}</p>
-				<p className="text">{elementData[languageIndex]}</p>
+				<p className="title">{pick(title)}</p>
+				<p className="text">{pick(elementData)}</p>
 			</div>
 		);
 	};
@@ -140,12 +147,11 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 		key: string,
 		elementData: ListResumeListItem,
 		title: ListResumeInternationalizedString,
-		languageIndex = 0,
 	): JSX.Element | null => {
 		if (elementData && elementData.length > 0) {
 			return (
 				<React.Fragment key={key}>
-					{<p className="list-title">{title[languageIndex]}</p>}
+					{<p className="list-title">{pick(title)}</p>}
 					<ul className="list-ul">
 						{Array.isArray(elementData) &&
 							elementData.map((listItem) => {
@@ -154,7 +160,7 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 										className="list-li"
 										key={`${key}-${listItem[0]}`}
 									>
-										{listItem[1][0]}
+										{pick(listItem[1])}
 									</li>
 								);
 							})}
@@ -181,7 +187,7 @@ const ResumeCard: React.FunctionComponent<ResumeCardProps> = (
 						return (
 							<li
 								dangerouslySetInnerHTML={{
-									__html: sanitizeHtml(listItem[1][0], {
+									__html: sanitizeHtml(pick(listItem[1]), {
 										allowedTags: ["b"],
 									}),
 								}}

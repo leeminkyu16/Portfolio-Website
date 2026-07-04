@@ -7,6 +7,8 @@ export const objectToListInternationalizedString = (
     const output: ListResumeInternationalizedString = [
         input.english,
         input.french,
+        input.korean ?? input.english,
+        input.japanese ?? input.english,
     ];
 
     return output;

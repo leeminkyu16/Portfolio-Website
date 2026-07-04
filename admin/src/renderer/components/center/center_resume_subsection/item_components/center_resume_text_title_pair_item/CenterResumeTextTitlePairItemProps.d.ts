@@ -5,8 +5,8 @@ import {
 import { ReactNode } from "react";
 
 export interface CenterResumeTextTitlePairItemProps {
-	addUpdateObjectFunction: (updateObjectFunction: () => void) => void;
 	textTitlePairItem: ObjectResumeTextTitlePairItem;
 	textTitlePairTemplateItem: ObjectResumeSubsectionTemplateItem;
+	onChange: (newTextTitlePairItem: ObjectResumeTextTitlePairItem) => void;
 	children?: ReactNode;
 }

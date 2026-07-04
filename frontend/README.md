@@ -138,8 +138,8 @@
 
 - Run `npm i`
 - Go to the [shared directory](../shared/)
-  - Run `npm i`
-  - Run `npm build`
-  - Come back to [this directory](.)
+    - Run `npm i`
+    - Run `npm build`
+    - Come back to [this directory](.)
 - Run `npm run link`
 - Run `npm run start`

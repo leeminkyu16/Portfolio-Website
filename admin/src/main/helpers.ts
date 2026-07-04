@@ -5,5 +5,5 @@ export const installExtensions = async (): Promise<any> => {
 
 	return Promise.all(
 		extensions.map((name) => installer.default(installer[name], forceDownload)),
-	).catch(console.log); // eslint-disable-line no-console
+	).catch(console.log);
 };

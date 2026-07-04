@@ -1,0 +1,45 @@
+.language-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.15rem;
+	padding: 0.15rem;
+	border-radius: 16px;
+	background: rgb(255 255 255 / 6%);
+	border: 1px solid rgb(255 255 255 / 14%);
+
+	&__option {
+		background: none;
+		border: none;
+		color: rgb(255 255 255 / 55%);
+		font-family: inherit;
+		font-size: 0.72rem;
+		line-height: 1;
+		padding: 0.28rem 0.5rem;
+		border-radius: 12px;
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			background 0.18s,
+			color 0.18s;
+
+		&:hover {
+			color: rgb(255 255 255 / 90%);
+		}
+
+		&:focus-visible {
+			outline: 2px solid rgb(150 170 255 / 60%);
+			outline-offset: 1px;
+		}
+
+		&--active {
+			background: linear-gradient(
+				135deg,
+				rgb(130 150 255 / 40%),
+				rgb(99 102 241 / 30%)
+			);
+			color: rgb(255 255 255 / 100%);
+			font-weight: 600;
+			box-shadow: 0 0 14px rgb(120 140 255 / 30%);
+		}
+	}
+}

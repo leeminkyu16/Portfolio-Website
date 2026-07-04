@@ -2,7 +2,7 @@ import { ListResumeSubsectionData } from "../../../../types/list_resume/ListResu
 
 const otherSkillsData: ListResumeSubsectionData = [
     [
-        ["Debugging", "Debugging"],
+        ["Debugging", "Débogage", "디버깅", "デバッグ"],
         [
             [0, ["Jest", "Jest"]],
             [1, ["GDB", "GDB"]],
@@ -26,14 +26,24 @@ const otherSkillsData: ListResumeSubsectionData = [
         ],
     ],
     [
-        ["Mobile Development", "Mobile Development"],
+        [
+            "Mobile Development",
+            "Développement mobile",
+            "모바일 개발",
+            "モバイル開発",
+        ],
         [
             [0, ["Android Studio", "Android Studio"]],
             [1, ["XCode", "XCode"]],
         ],
     ],
     [
-        ["Remote Access / Development", "Remote Access / Development"],
+        [
+            "Remote Access / Development",
+            "Accès / développement à distance",
+            "원격 접속 / 개발",
+            "リモートアクセス / 開発",
+        ],
         [
             [0, ["PuTTY", "PuTTY"]],
             [

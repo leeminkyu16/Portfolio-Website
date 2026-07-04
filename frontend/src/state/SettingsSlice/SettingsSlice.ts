@@ -1,5 +1,6 @@
 import { PayloadAction, Reducer, Slice, createSlice } from "@reduxjs/toolkit";
 import { BackgroundShape } from "../../enums/background-shape";
+import { Language } from "../../enums/language";
 import {
 	booleanToString,
 	stringToBoolean,
@@ -9,6 +10,16 @@ import { SettingsSliceState } from "./SettingsSliceTypes";
 const BACKGROUND_SHAPE_KEY = "BACKGROUND_SHAPE_KEY";
 const BACKGROUND_AUTO_ROTATE_KEY = "BACKGROUND_AUTO_ROTATE_KEY";
 const SECTIONS_FADE_KEY = "SECTIONS_FADE_KEY";
+const LANGUAGE_KEY = "LANGUAGE_KEY";
+
+// Only accept a persisted value that is a real Language; otherwise default to
+// English. Guards against a stale/garbage localStorage entry.
+function readLanguage(): Language {
+	const stored = localStorage.getItem(LANGUAGE_KEY);
+	return Object.values(Language).includes(stored as Language)
+		? (stored as Language)
+		: Language.ENGLISH;
+}
 
 const initialState: SettingsSliceState =
 	typeof window !== "undefined"
@@ -25,13 +36,15 @@ const initialState: SettingsSliceState =
 					localStorage.getItem(SECTIONS_FADE_KEY),
 					true,
 				),
-		  } as SettingsSliceState)
+				language: readLanguage(),
+			} as SettingsSliceState)
 		: ({
 				backgroundShape: BackgroundShape.SPHERE,
 				showSettingsModal: false,
 				backgroundAutoRotate: true,
 				sectionsFade: true,
-		  } as SettingsSliceState);
+				language: Language.ENGLISH,
+			} as SettingsSliceState);
 
 const settingsSlice: Slice<SettingsSliceState> = createSlice({
 	name: "settings",
@@ -63,6 +76,10 @@ const settingsSlice: Slice<SettingsSliceState> = createSlice({
 				booleanToString(action.payload),
 			);
 			state.sectionsFade = action.payload;
+		},
+		setLanguage: (state, action: PayloadAction<Language>): void => {
+			localStorage.setItem(LANGUAGE_KEY, action.payload);
+			state.language = action.payload;
 		},
 	},
 });

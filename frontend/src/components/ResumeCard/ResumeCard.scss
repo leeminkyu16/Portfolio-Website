@@ -1,12 +1,68 @@
 @use "../../styles/constants/colors.scss" as color;
 
+// Shared accent palette for card contents — matches the galaxy/indigo theme
+// used by the section titles and the setting panel.
+$accent-indigo: rgb(150 170 255);
+$accent-cyan: rgb(130 220 255);
+$muted-label: rgb(180 190 230 / 70%);
+
 .resume-card-article {
+	position: relative;
 	padding: max(5%, 35px);
 	margin: 2%;
-	background-color: color.$resume-card-background-color;
+	background: linear-gradient(
+		160deg,
+		rgb(16 18 44 / 82%) 0%,
+		rgb(7 8 26 / 88%) 100%
+	);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
 	color: color.$primary-text-on-primary-background-color;
+	border: 1px solid rgb(140 160 255 / 16%);
 	border-radius: 3vh;
-	box-shadow: color.$primary-shadow-on-primary-background-color 0 8px 24px;
+	box-shadow:
+		0 18px 48px rgb(0 0 0 / 45%),
+		0 0 30px rgb(80 100 220 / 12%),
+		inset 0 1px 0 rgb(255 255 255 / 8%);
+	overflow: hidden;
+	transition:
+		transform 0.35s ease,
+		box-shadow 0.35s ease,
+		border-color 0.35s ease;
+
+	// Luminous accent bar along the top edge — reads as a highlight without
+	// adding a hard border. Brightens on hover.
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgb(120 140 255 / 55%) 20%,
+			rgb(150 200 255 / 80%) 50%,
+			rgb(120 140 255 / 55%) 80%,
+			transparent 100%
+		);
+		opacity: 0.65;
+		transition: opacity 0.35s ease;
+	}
+
+	&:hover {
+		transform: translateY(-4px);
+		border-color: rgb(150 175 255 / 40%);
+		box-shadow:
+			0 26px 60px rgb(0 0 0 / 55%),
+			0 0 44px rgb(100 120 255 / 26%),
+			inset 0 1px 0 rgb(255 255 255 / 12%);
+
+		&::before {
+			opacity: 1;
+		}
+	}
 
 	@mixin card-element-margins {
 		&:first-child {
@@ -22,39 +78,89 @@
 		@include card-element-margins;
 
 		margin: 3% 0;
-		font-size: 150%;
-		font-weight: bold;
+		font-size: 155%;
+		font-weight: 800;
+		line-height: 1.2;
+		letter-spacing: 0.01em;
+		background: linear-gradient(
+			110deg,
+			rgb(255 255 255) 0%,
+			rgb(210 220 255) 55%,
+			rgb(165 195 255) 100%
+		);
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
 		color: color.$primary-text-on-primary-background-color;
+	}
+
+	// Anchor variant of heading1 — keep the gradient, add an underline glow
+	// on hover so it reads as interactive.
+	a.heading1-p {
+		display: inline-block;
+		text-decoration: none;
+		transition: filter 0.25s ease;
+
+		&:hover {
+			filter: drop-shadow(0 0 10px rgb(140 170 255 / 55%));
+		}
 	}
 
 	.heading2-p {
 		@include card-element-margins;
 
 		margin-top: 0.5%;
-		margin-bottom: 0.5%;
-		font-size: 125%;
-		font-weight: bold;
-		color: color.$secondary-text-on-primary-background-color;
+		margin-bottom: 1.5%;
+		font-size: 118%;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: $accent-indigo;
 	}
 
+	// Date range rendered as a single elegant pill: muted uppercase labels,
+	// bright values, and an arrow separating start from end.
 	.start-end-date-div {
 		@include card-element-margins;
 
-		display: flex;
-		flex-direction: row;
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.35rem 0.55rem;
+		margin: 3% 0;
+		padding: 0.4rem 0.9rem;
+		border: 1px solid rgb(140 160 255 / 22%);
+		border-radius: 999px;
+		background: linear-gradient(
+			120deg,
+			rgb(80 100 220 / 14%),
+			rgb(60 80 200 / 6%)
+		);
 		color: color.$secondary-text-on-primary-background-color;
 
 		.date-title {
-			font-weight: bold;
-			margin-right: 2%;
-			margin-top: 0.5%;
-			margin-bottom: 0.5%;
+			margin: 0;
+			font-size: 0.7rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: $muted-label;
 		}
 
 		.date-content {
-			margin-right: 5%;
-			margin-top: 0.5%;
-			margin-bottom: 0.5%;
+			margin: 0;
+			font-weight: 600;
+			color: rgb(230 236 255 / 95%);
+		}
+
+		// Arrow between the end of the start-date value and the end-date label.
+		.date-title:nth-of-type(2)::before {
+			content: "→";
+			display: inline-block;
+			margin-right: 0.55rem;
+			color: $accent-cyan;
+			font-weight: 700;
+			-webkit-text-fill-color: $accent-cyan;
 		}
 	}
 
@@ -75,7 +181,9 @@
 			& .title {
 				@include text-div-common;
 
-				font-weight: bold;
+				font-weight: 700;
+				letter-spacing: 0.02em;
+				color: $accent-indigo;
 				margin-right: 3%;
 			}
 
@@ -87,7 +195,8 @@
 		&-p {
 			@include card-element-margins;
 
-			color: color.$primary-text-on-primary-background-color;
+			color: rgb(226 230 245 / 92%);
+			line-height: 1.55;
 			margin-top: 1%;
 			margin-bottom: 1%;
 		}
@@ -98,22 +207,62 @@
 			@include card-element-margins;
 
 			margin-top: 0%;
-			margin-bottom: 0.5%;
-			font-weight: bold;
+			margin-bottom: 0.75rem;
+			font-weight: 700;
+			letter-spacing: 0.03em;
+			color: $accent-indigo;
 		}
 
 		&-ul {
 			@include card-element-margins;
 
+			list-style: none;
 			margin-top: 1%;
 			margin-bottom: 1%;
+			padding-left: 0;
 
 			.list-li {
 				@include card-element-margins;
 
-				color: color.$primary-text-on-primary-background-color;
-				margin-top: 0.5%;
-				margin-bottom: 0.5%;
+				position: relative;
+				padding-left: 1.5rem;
+				color: rgb(226 230 245 / 92%);
+				line-height: 1.55;
+				margin-top: 0.55rem;
+				margin-bottom: 0.55rem;
+				transition:
+					color 0.2s ease,
+					transform 0.2s ease;
+
+				// Glowing gradient bullet.
+				&::before {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: 0.62em;
+					width: 7px;
+					height: 7px;
+					border-radius: 50%;
+					background: linear-gradient(
+						135deg,
+						rgb(160 200 255),
+						rgb(120 130 255)
+					);
+					box-shadow: 0 0 8px rgb(130 160 255 / 70%);
+					transition:
+						box-shadow 0.2s ease,
+						transform 0.2s ease;
+				}
+
+				&:hover {
+					color: rgb(255 255 255);
+					transform: translateX(3px);
+
+					&::before {
+						box-shadow: 0 0 14px rgb(150 190 255 / 90%);
+						transform: scale(1.25);
+					}
+				}
 			}
 		}
 	}

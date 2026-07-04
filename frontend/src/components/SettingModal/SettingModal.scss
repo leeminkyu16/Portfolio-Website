@@ -1,68 +1,288 @@
 @use "../../styles/mixins/checkbox.scss" as checkboxes;
 @use "../../styles/mixins/responsive.scss" as responsive;
-@use "../../styles/mixins/button.scss" as button;
 @use "../../styles/constants/colors.scss" as color;
+
+$accent-indigo: rgb(150 170 255);
 
 .setting-panel {
 	position: fixed;
-	z-index: 1;
+	z-index: 3;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	background-color: color.$primary-translucent-background-color;
-	display: grid;
-	align-items: center;
-	justify-items: center;
-	grid-template-columns: repeat(2, 1fr);
-	grid-template-rows: repeat(8, 1fr);
+	background: linear-gradient(
+		155deg,
+		rgb(22 24 52 / 92%) 0%,
+		rgb(9 10 28 / 94%) 100%
+	);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid rgb(150 170 255 / 22%);
+	border-radius: 20px;
+	box-shadow:
+		0 24px 70px rgb(0 0 0 / 60%),
+		0 0 50px rgb(99 102 241 / 18%),
+		inset 0 1px 0 rgb(255 255 255 / 10%);
+	color: rgb(224 228 250 / 92%);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 	overflow: auto;
-	width: 100%;
-	height: 100%;
+	padding: 1.75rem;
+	box-sizing: border-box;
+	width: 90%;
+	max-height: 85%;
+	animation: setting-panel-in 0.35s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+
+	// Luminous accent bar along the top edge.
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		border-radius: 20px 20px 0 0;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgb(120 140 255 / 60%) 30%,
+			rgb(160 200 255 / 85%) 50%,
+			rgb(120 140 255 / 60%) 70%,
+			transparent 100%
+		);
+	}
 
 	@include responsive.is(small) {
-		width: 85%;
-		height: 85%;
+		width: 70%;
 	}
 
 	@include responsive.is(medium) {
-		width: 70%;
-		height: 70%;
+		width: 52%;
 	}
 
 	@include responsive.is(large) {
-		width: 50%;
-		height: 50%;
+		width: 40%;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid rgb(150 170 255 / 16%);
 	}
 
 	&__title {
-		color: color.$primary-text-on-primary-background-color;
-		grid-column: span 2;
+		margin: 0;
+		font-size: 1.6rem;
+		color: rgb(238 240 255 / 96%);
+		letter-spacing: 0.03em;
+		text-shadow: 0 0 22px rgb(130 150 255 / 45%);
+	}
+
+	&__close-x {
+		appearance: none;
+		border: 1px solid rgb(150 170 255 / 22%);
+		background: rgb(255 255 255 / 4%);
+		color: rgb(214 220 245 / 85%);
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		font-size: 1.3rem;
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			background 0.2s,
+			border-color 0.2s,
+			transform 0.2s,
+			color 0.2s;
+
+		&:hover {
+			background: rgb(120 130 255 / 20%);
+			border-color: rgb(170 190 255 / 70%);
+			color: rgb(255 255 255);
+			transform: rotate(90deg);
+		}
 	}
 
 	&__subtitle {
-		color: color.$primary-text-on-primary-background-color;
-		grid-column: span 2;
+		margin: 0.25rem 0 0;
+		color: rgb(190 200 235 / 80%);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-size: 0.8rem;
 	}
 
-	&__background {
-		background-color: color.$primary-translucent-background-color;
-		z-index: 2;
-		width: 100%;
-		height: 100%;
-		position: fixed;
+	&__group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	&__options {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.6rem;
 	}
 
 	&__button {
-		grid-column: span 2;
+		appearance: none;
+		margin-top: 0.5rem;
+		padding: 0.65rem;
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		cursor: pointer;
+		border-radius: 14px;
+		border: 1px solid rgb(150 170 255 / 45%);
+		background: linear-gradient(
+			135deg,
+			rgb(99 102 241 / 28%),
+			rgb(56 130 240 / 20%)
+		);
+		color: rgb(224 228 255 / 96%);
+		box-shadow: 0 0 22px rgb(99 102 241 / 22%);
+		transition:
+			background 0.25s,
+			border-color 0.25s,
+			box-shadow 0.25s,
+			transform 0.25s;
 
-		@include button.rounded-primary-button;
-	}
-
-	&__label {
-		color: color.$primary-text-on-primary-background-color;
+		&:hover {
+			background: linear-gradient(
+				135deg,
+				rgb(120 125 255 / 40%),
+				rgb(70 150 250 / 30%)
+			);
+			border-color: rgb(170 190 255 / 80%);
+			box-shadow: 0 0 30px rgb(120 130 255 / 45%);
+			transform: translateY(-1px);
+		}
 	}
 
 	&__checkbox {
 		@include checkboxes.standard;
+
+		flex: 0 0 auto;
+	}
+
+	&__background {
+		background-color: rgb(2 3 12 / 55%);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+		z-index: 2;
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		animation: setting-backdrop-in 0.3s ease both;
+	}
+}
+
+// A label + toggle row that highlights on hover.
+.setting-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.65rem 0.85rem;
+	border-radius: 12px;
+	border: 1px solid rgb(150 170 255 / 12%);
+	background: rgb(255 255 255 / 3%);
+	cursor: pointer;
+	transition:
+		background 0.2s,
+		border-color 0.2s;
+
+	&:hover {
+		background: rgb(120 130 255 / 10%);
+		border-color: rgb(150 170 255 / 28%);
+	}
+
+	&__label {
+		color: rgb(220 226 250 / 92%);
+		font-size: 0.98rem;
+	}
+}
+
+// Selectable layout option (Sphere / Helix / Grid).
+.setting-option {
+	appearance: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.9rem 0.5rem;
+	cursor: pointer;
+	border-radius: 14px;
+	border: 1px solid rgb(150 170 255 / 16%);
+	background: rgb(255 255 255 / 3%);
+	color: rgb(214 220 245 / 80%);
+	transition:
+		background 0.2s,
+		border-color 0.2s,
+		transform 0.2s,
+		box-shadow 0.2s,
+		color 0.2s;
+
+	&__glyph {
+		font-size: 1.6rem;
+		line-height: 1;
+	}
+
+	&__label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+	}
+
+	&:hover {
+		background: rgb(120 130 255 / 12%);
+		border-color: rgb(150 170 255 / 40%);
+		transform: translateY(-2px);
+		color: rgb(240 244 255 / 95%);
+	}
+
+	&--active {
+		border-color: rgb(150 190 255 / 75%);
+		background: linear-gradient(
+			150deg,
+			rgb(99 102 241 / 32%),
+			rgb(56 130 240 / 22%)
+		);
+		color: rgb(245 248 255 / 98%);
+		box-shadow:
+			0 0 24px rgb(110 130 255 / 35%),
+			inset 0 1px 0 rgb(255 255 255 / 12%);
+
+		.setting-option__glyph {
+			color: $accent-indigo;
+			text-shadow: 0 0 14px rgb(150 180 255 / 70%);
+		}
+	}
+}
+
+@keyframes setting-panel-in {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -46%) scale(0.96);
+	}
+
+	to {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+}
+
+@keyframes setting-backdrop-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
 	}
 }

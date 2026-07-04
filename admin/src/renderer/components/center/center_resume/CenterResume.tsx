@@ -1,130 +1,124 @@
-import React, { FunctionComponent, RefObject, createRef, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { FunctionComponent } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ObjectResumeUniqueId, ObjectResumeSection } from "portfolio-website-shared";
 import { CenterResumeProps } from "./CenterResumeProps";
-import { mapDispatchToProps, mapStateToProps } from "./component_redux_functions";
 import { generateUniqueId } from "../shared/functions/generate_unique_id";
 import { ElementTopRightButtons } from "../shared/components/ElementTopRightButtons";
+import { resumeActions } from "../../../store/components/resume/resumeSlice";
+import { centerViewActions } from "../../../store/components/center_view/centerViewSlice";
+import { RootState } from "../../../store/RootState";
 import "./CenterResume.scss";
 
-const CenterResume: FunctionComponent<CenterResumeProps> = (
-	props: CenterResumeProps,
-): JSX.Element => {
-	const updateObjectFunctions: (() => void)[] = [];
+const CenterResume: FunctionComponent<CenterResumeProps> = (): JSX.Element => {
+	const dispatch = useDispatch();
+	const resume = useSelector((state: RootState) => state.resume.value);
 
-	const syncState = (): void => {
-		updateObjectFunctions.forEach((updateFunction: () => void): void => {
-			updateFunction();
-		});
+	const updateSection = (sectionIndex: number, section: ObjectResumeSection): void => {
+		dispatch(resumeActions.setResumeSection({ sectionIndex, section }));
 	};
-
-	useEffect((): void => {
-		props.setSyncResumeAction(syncState);
-	}, [props.setSyncResumeAction, updateObjectFunctions, syncState]);
 
 	return (
 		<div className="common-page-container__div">
-			{props.resume.map(
-				(resumeSection: ObjectResumeSection, sectionIndex: number): JSX.Element => {
-					const itemCopy: ObjectResumeSection = resumeSection;
+			{resume.map((resumeSection: ObjectResumeSection, sectionIndex: number): JSX.Element => (
+				<div
+					className="common-element-container__div"
+					key={`resume-${resumeSection.uniqueId}`}
+				>
+					<ElementTopRightButtons
+						listState={resume}
+						setListState={(newResume) => dispatch(resumeActions.setResume(newResume))}
+						elementIndex={sectionIndex}
+					/>
 
-					const uniqueIdInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const titleEnglishInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
-					const titleFrenchInputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
+					<p className="common-label__p">Unique Id:</p>
 
-					updateObjectFunctions.push((): void => {
-						if (
-							uniqueIdInputRef.current !== null &&
-							uniqueIdInputRef.current.value !== undefined
-						) {
-							itemCopy.uniqueId = parseInt(uniqueIdInputRef.current.value, 10);
+					<input
+						className="common-text__input"
+						type="number"
+						aria-label="Unique Id"
+						value={resumeSection.uniqueId}
+						onChange={(event): void =>
+							updateSection(sectionIndex, {
+								...resumeSection,
+								uniqueId: parseInt(event.target.value, 10) || 0,
+							})
 						}
-						if (
-							titleEnglishInputRef.current !== null &&
-							titleEnglishInputRef.current.value !== undefined
-						) {
-							itemCopy.title.english = titleEnglishInputRef.current.value;
-						}
-						if (
-							titleFrenchInputRef.current !== null &&
-							titleFrenchInputRef.current.value !== undefined
-						) {
-							itemCopy.title.french = titleFrenchInputRef.current.value;
-						}
-					});
+					/>
 
-					return (
-						<div
-							className="common-element-container__div"
-							key={`resume-${resumeSection.uniqueId}`}
-						>
-							<ElementTopRightButtons
-								listState={props.resume}
-								setListState={props.setResumeAction}
-								elementIndex={sectionIndex}
-							/>
+					<p className="common-label__p">Title:</p>
 
-							<p className="common-label__p">Unique Id:</p>
+					<div className="common-item-container__div">
+						<p className="common-label__p">English:</p>
+						<input
+							className="common-text__input"
+							type="text"
+							aria-label="Title (English)"
+							value={resumeSection.title.english}
+							onChange={(event): void =>
+								updateSection(sectionIndex, {
+									...resumeSection,
+									title: {
+										...resumeSection.title,
+										english: event.target.value,
+									},
+								})
+							}
+						/>
 
-							<input
-								className="common-text__input"
-								type="number"
-								defaultValue={resumeSection.uniqueId}
-								ref={uniqueIdInputRef}
-							/>
+						<p className="common-label__p">Français:</p>
+						<input
+							className="common-text__input"
+							type="text"
+							aria-label="Title (French)"
+							value={resumeSection.title.french}
+							onChange={(event): void =>
+								updateSection(sectionIndex, {
+									...resumeSection,
+									title: {
+										...resumeSection.title,
+										french: event.target.value,
+									},
+								})
+							}
+						/>
+					</div>
 
-							<p className="common-label__p">Title:</p>
+					<button
+						className="common__button"
+						type="button"
+						onClick={(): void => {
+							dispatch(centerViewActions.setSectionIndex(sectionIndex));
+						}}
+					>
+						Open Subsection
+					</button>
+				</div>
+			))}
 
-							<div className="common-item-container__div">
-								<p className="common-label__p">English:</p>
-								<input
-									className="common-text__input"
-									type="text"
-									defaultValue={resumeSection.title.english}
-									ref={titleEnglishInputRef}
-								/>
-
-								<p className="common-label__p">Français:</p>
-								<input
-									className="common-text__input"
-									type="text"
-									defaultValue={resumeSection.title.french}
-									ref={titleFrenchInputRef}
-								/>
-							</div>
-
-							<button
-								className="common__button"
-								onClick={(): void => {
-									syncState();
-
-									props.setCenterViewSectionIndexAction(sectionIndex);
-								}}
-							>
-								Open Subsection
-							</button>
-						</div>
-					);
-				},
+			{resume.length === 0 && (
+				<p className="common-empty__p">No resume sections yet. Add one below.</p>
 			)}
 
 			<button
 				className="common__button"
+				type="button"
 				onClick={(): void => {
-					props.setResumeAction([
-						...props.resume,
-						{
-							uniqueId: generateUniqueId(
-								props.resume.map(
-									(
-										objectResumeSection: ObjectResumeSection,
-									): ObjectResumeUniqueId => objectResumeSection.uniqueId,
+					dispatch(
+						resumeActions.setResume([
+							...resume,
+							{
+								uniqueId: generateUniqueId(
+									resume.map(
+										(
+											objectResumeSection: ObjectResumeSection,
+										): ObjectResumeUniqueId => objectResumeSection.uniqueId,
+									),
 								),
-							),
-							title: { english: "", french: "" },
-							data: [],
-						},
-					]);
+								title: { english: "", french: "" },
+								data: [],
+							},
+						]),
+					);
 				}}
 			>
 				Add Resume Section
@@ -133,4 +127,4 @@ const CenterResume: FunctionComponent<CenterResumeProps> = (
 	);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CenterResume);
+export default CenterResume;

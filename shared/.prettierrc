@@ -1,5 +1,4 @@
 {
-    "organizeImportsSkipDestructiveCodeActions": true,
     "trailingComma": "all",
     "useTabs": false,
     "tabWidth": 4,

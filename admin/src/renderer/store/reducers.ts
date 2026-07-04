@@ -1,10 +1,8 @@
-import { combineReducers } from "redux";
-import { centerViewReducer } from "./components/center_view/center_view_reducer";
-import { resumeReducer } from "./components/resume/resume_reducer";
+import { combineReducers } from "@reduxjs/toolkit";
+import { resumeReducer } from "./components/resume/resumeSlice";
+import { centerViewReducer } from "./components/center_view/centerViewSlice";
 
-import { RootState } from "./RootState";
-
-export const rootReducer = combineReducers<RootState | undefined>({
+export const rootReducer = combineReducers({
 	resume: resumeReducer,
 	centerViewState: centerViewReducer,
 });

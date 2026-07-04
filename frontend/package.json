@@ -11,7 +11,8 @@
     "start-network": "gatsby develop -H 0.0.0.0",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
     "lint-code-eslint": "eslint \"src/**/*.{js,jsx,ts,tsx,json,md}\" --fix",
     "lint-code-prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint-style": "stylelint \"src/**/*.scss\" --fix",
@@ -19,43 +20,76 @@
     "link": "npm link ../shared"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.8.5",
-    "@tweenjs/tween.js": "^20.0.3",
-    "gatsby": "^5.9.0",
-    "gatsby-plugin-manifest": "^5.8.0",
-    "gatsby-plugin-sass": "^6.9.0",
+    "@reduxjs/toolkit": "^2.12.0",
+    "@tweenjs/tween.js": "^25.0.0",
+    "gatsby": "^5.16.1",
+    "gatsby-plugin-manifest": "^5.16.0",
+    "gatsby-plugin-react-helmet": "^6.16.0",
+    "gatsby-plugin-sass": "^6.16.0",
     "portfolio-website-shared": "../shared",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-redux": "^8.0.5",
-    "redux": "^4.2.1",
-    "sanitize-html": "^2.10.0",
-    "sass": "^1.62.1",
-    "three": "^0.152.2"
+    "react-redux": "^9.3.0",
+    "redux": "^5.0.1",
+    "sanitize-html": "^2.17.5",
+    "sass": "^1.101.0",
+    "three": "^0.185.1"
   },
   "devDependencies": {
-    "@types/loadable__component": "^5.13.4",
-    "@types/node": "^18.7.19",
+    "@eslint/js": "^9.39.4",
+    "@types/jest": "^30.0.0",
+    "@types/loadable__component": "^5.13.10",
+    "@types/node": "^26.1.0",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
-    "@types/react-helmet": "^6.1.5",
-    "@types/react-redux": "^7.1.24",
-    "@types/sanitize-html": "^2.6.2",
-    "@types/three": "^0.144.0",
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.1",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-markdown": "^3.0.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.8",
-    "prettier": "^2.8.8",
-    "prettier-plugin-organize-imports": "^3.2.2",
-    "stylelint": "^15.6.1",
-    "stylelint-config-standard-scss": "^9.0.0",
-    "stylelint-prettier": "^3.0.0",
-    "stylelint-scss": "^5.0.0"
+    "@types/react-helmet": "^6.1.11",
+    "@types/sanitize-html": "^2.16.1",
+    "@types/three": "^0.185.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-markdown": "^5.1.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react": "^7.37.5",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "prettier": "^3.9.4",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "stylelint": "^17.14.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-prettier": "^5.0.3",
+    "stylelint-scss": "^7.2.0",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/src/.+\\.spec)\\.tsx?$",
+    "testEnvironment": "jsdom",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/mocks/fileMock.js",
+      "\\.(s?css|sass)$": "<rootDir>/mocks/styleMock.js",
+      "^three$": "<rootDir>/mocks/fileMock.js",
+      "^@tweenjs/tween.js$": "<rootDir>/mocks/fileMock.js",
+      "^portfolio-website-shared$": "<rootDir>/../shared/src/index.ts"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsconfig": {
+          "jsx": "react"
+        }
+      }
+    }
   },
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"

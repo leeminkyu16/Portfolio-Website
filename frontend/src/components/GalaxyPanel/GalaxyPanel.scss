@@ -1,0 +1,166 @@
+@use "../../styles/mixins/responsive.scss" as responsive;
+
+.galaxy-panel {
+	position: fixed;
+	z-index: 10;
+	box-sizing: border-box;
+	background-color: rgb(5 5 30 / 85%);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	color: rgb(255 255 255 / 90%);
+	overflow: hidden auto;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+	// --- Mobile (default): bottom sheet ---
+	// Anchored to the bottom edge so the star field stays visible above it,
+	// keeping the spatial "which star did I tap" context. Slides up/down.
+	inset: auto 0 0;
+	width: 100%;
+
+	// dvh tracks the *visible* viewport as the mobile URL bar shows/hides, so
+	// the sheet's lower content is never left stranded behind the browser chrome
+	// (plain vh measures the tall viewport → intermittently clipped).
+	height: 75vh;
+	height: 75dvh;
+	padding: 1.25rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+	border-top: 1px solid var(--galaxy-accent, #6366f1);
+	border-radius: 20px 20px 0 0;
+	box-shadow:
+		inset 0 4px 32px -8px var(--galaxy-accent, #6366f1),
+		0 -12px 40px rgb(0 0 0 / 45%);
+	transform: translateY(100%);
+
+	// Drag-handle affordance at the top edge (mobile only).
+	&::before {
+		content: "";
+		display: block;
+		width: 36px;
+		height: 4px;
+		margin: 0 auto 0.85rem;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 35%);
+	}
+
+	&--open {
+		transform: translateY(0);
+	}
+
+	&--hidden {
+		display: none;
+	}
+
+	// --- Desktop (>=768px): right side panel ---
+	@include responsive.is(small) {
+		inset: 0 0 auto auto;
+		width: 55%;
+		height: 100vh;
+		height: 100dvh;
+		padding: 1.5rem 2rem;
+		border-top: none;
+		border-left: 1px solid var(--galaxy-accent, #6366f1);
+		border-radius: 0;
+		box-shadow: inset 4px 0 32px -8px var(--galaxy-accent, #6366f1);
+		transform: translateX(100%);
+
+		&::before {
+			display: none;
+		}
+
+		&--open {
+			transform: translateX(0);
+		}
+	}
+
+	@include responsive.is(medium) {
+		width: 45%;
+	}
+
+	@include responsive.is(large) {
+		width: 35%;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 1rem;
+		margin-bottom: 1.5rem;
+		border-bottom: 1px solid rgb(255 255 255 / 8%);
+	}
+
+	&__context {
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.85;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__close {
+		background: transparent;
+		border: 1px solid rgb(255 255 255 / 30%);
+		color: rgb(255 255 255 / 80%);
+		font-size: 1.2rem;
+		width: 2rem;
+		height: 2rem;
+		min-width: 2rem;
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition:
+			border-color 0.2s,
+			color 0.2s;
+
+		&:hover {
+			border-color: var(--galaxy-accent, #6366f1);
+			color: var(--galaxy-accent, #6366f1);
+		}
+	}
+
+	&__content {
+		.heading1-p {
+			font-size: 1.4rem;
+			font-weight: bold;
+			letter-spacing: 0.04em;
+			color: rgb(255 255 255 / 100%);
+			margin-bottom: 0.5rem;
+		}
+
+		.heading2-p {
+			font-size: 1.1rem;
+			font-weight: 500;
+			color: rgb(200 200 220 / 90%);
+			margin-bottom: 0.4rem;
+		}
+
+		.text-p {
+			color: rgb(200 200 220 / 85%);
+			line-height: 1.6;
+		}
+
+		.list-ul {
+			color: rgb(200 200 220 / 85%);
+			line-height: 1.6;
+		}
+
+		.start-end-date-div {
+			color: rgb(180 180 200 / 80%);
+			font-size: 0.9rem;
+			display: flex;
+			gap: 1rem;
+			flex-wrap: wrap;
+
+			.date-title {
+				font-weight: bold;
+			}
+		}
+	}
+}
